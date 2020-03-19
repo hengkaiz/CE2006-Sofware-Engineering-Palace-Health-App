@@ -1,4 +1,4 @@
-package com.google.firebase.example.fireeats.viewmodel;
+package com.google.firebase.example.fireeats;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
