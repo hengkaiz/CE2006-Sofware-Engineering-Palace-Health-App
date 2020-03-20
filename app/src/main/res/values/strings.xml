@@ -43,18 +43,8 @@
     <string-array name="categories">
         <item>@string/value_any_category</item>
 
-        <item>Brunch</item>
-        <item>Burgers</item>
-        <item>Coffee</item>
-        <item>Deli</item>
-        <item>Dim Sum</item>
-        <item>Indian</item>
-        <item>Italian</item>
-        <item>Mediterranean</item>
-        <item>Mexican</item>
-        <item>Pizza</item>
-        <item>Ramen</item>
-        <item>Sushi</item>
+        <item>Vegetarian</item>
+        <item>Halal</item>
     </string-array>
     ite
 
