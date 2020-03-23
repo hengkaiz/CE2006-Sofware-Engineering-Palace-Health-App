@@ -16,6 +16,7 @@
  package com.google.firebase.example.fireeats;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,10 +27,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -91,8 +95,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mEmptyView = findViewById(R.id.view_empty_ratings);
         mRatingsRecycler = findViewById(R.id.recycler_ratings);
 
+
         findViewById(R.id.restaurant_button_back).setOnClickListener(this);
         findViewById(R.id.fab_show_rating_dialog).setOnClickListener(this);
+        findViewById(R.id.show_directions).setOnClickListener(this);
 
         // Get restaurant ID from extras
         String restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
@@ -160,6 +166,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
                 break;
             case R.id.fab_show_rating_dialog:
                 onAddRatingClicked(v);
+                break;
+            case R.id.show_directions:
+                Intent intent = new Intent(RestaurantDetailActivity.this, MapsActivity.class);
+                startActivity(intent);
                 break;
         }
     }
