@@ -51087,3 +51087,16 @@ system-images/android-29/google_apis_playstore/x86/vendor.img
 system-images/android-29/google_apis_playstore/x86/VerifiedBootParams.textproto
 local.properties
 *.properties
+extras/google/usb_driver/package.xml
+extras/google/usb_driver/i386/WUDFUpdate_01009.dll
+extras/google/usb_driver/i386/winusbcoinstaller2.dll
+extras/google/usb_driver/i386/WdfCoInstaller01009.dll
+extras/google/usb_driver/i386/NOTICE.txt
+extras/google/usb_driver/androidwinusba64.cat
+extras/google/usb_driver/androidwinusb86.cat
+extras/google/usb_driver/android_winusb.inf
+extras/google/usb_driver/amd64/WUDFUpdate_01009.dll
+extras/google/usb_driver/amd64/winusbcoinstaller2.dll
+extras/google/usb_driver/amd64/WdfCoInstaller01009.dll
+extras/google/usb_driver/amd64/NOTICE.txt
+extras/google/usb_driver/amd64/NOTICE.txt

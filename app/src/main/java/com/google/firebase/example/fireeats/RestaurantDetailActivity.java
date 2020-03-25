@@ -18,6 +18,7 @@
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,6 +81,11 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
 
     private RatingAdapter mRatingAdapter;
 
+    private String restaurantId;
+    private double restaurantLat;
+    private double restaurantLng;
+    private String restaurantName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +107,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         findViewById(R.id.show_directions).setOnClickListener(this);
 
         // Get restaurant ID from extras
-        String restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
+        restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
         if (restaurantId == null) {
             throw new IllegalArgumentException("Must pass extra " + KEY_RESTAURANT_ID);
         }
@@ -169,6 +175,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
                 break;
             case R.id.show_directions:
                 Intent intent = new Intent(RestaurantDetailActivity.this, MapsActivity.class);
+                intent.putExtra(MapsActivity.KEY_RESTAURANT_ID, restaurantId);
+                intent.putExtra(MapsActivity.RESTAURANT_LAT, restaurantLat);
+                intent.putExtra(MapsActivity.RESTAURANT_LNG, restaurantLng);
+                intent.putExtra(MapsActivity.RESTAURANT_NAME, restaurantName);
                 startActivity(intent);
                 break;
         }
@@ -188,6 +198,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
             Log.w(TAG, "restaurant:onEvent", e);
             return;
         }
+
+        restaurantLat = snapshot.getDouble("y");
+        restaurantLng = snapshot.getDouble("x");
+        restaurantName = snapshot.getString("name");
 
         onRestaurantLoaded(snapshot.toObject(Restaurant.class));
     }
