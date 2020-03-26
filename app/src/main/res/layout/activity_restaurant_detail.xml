@@ -118,6 +118,19 @@
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/show_directions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/fab_show_rating_dialog"
+        android:layout_alignBottom="@+id/fab_show_rating_dialog"
+        android:layout_marginEnd="74dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="-1dp"
+        android:clickable="true"
+        app:backgroundTint="#FF0000"
+        app:srcCompat="@drawable/ic_place_white_24px" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_show_rating_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -171,17 +184,4 @@
             android:textColor="@color/greyDisabled" />
 
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/show_directions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/fab_show_rating_dialog"
-        android:layout_alignBottom="@+id/fab_show_rating_dialog"
-        android:layout_marginEnd="108dp"
-        android:layout_marginBottom="-1dp"
-        android:clickable="true"
-        app:backgroundTint="#FF0000"
-        app:srcCompat="@drawable/ic_place_white_24px" />
-
 </RelativeLayout>
