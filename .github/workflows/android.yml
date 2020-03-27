@@ -20,6 +20,6 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
     - name: reconfig file
-      run: sed $'s/\r$//' ./gradlew
+      run: sed $'s/\r$//' ./gradlew > ./gradlew_unix
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew_unix build
