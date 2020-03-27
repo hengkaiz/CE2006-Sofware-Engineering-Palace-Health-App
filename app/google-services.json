@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "182003112547",
+    "firebase_url": "https://palace-se.firebaseio.com",
+    "project_id": "palace-se",
+    "storage_bucket": "palace-se.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182003112547:android:5ff54516470509dda9b656",
+        "android_client_info": {
+          "package_name": "com.google.firebase.se.palace.health"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182003112547-isr5o5sricokgn2lab8gf1vdsq7ro2b8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.google.firebase.se.palace.health",
+            "certificate_hash": "3f1c0101897addd52ae7b4a271fca1867aa4c1fd"
+          }
+        },
+        {
+          "client_id": "182003112547-mkp6k0e686cof7o7jv61ivq8kfj2hsph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.google.firebase.se.palace.health",
+            "certificate_hash": "e8f10beb11a5815d0107abe6ae887718b015763f"
+          }
+        },
+        {
+          "client_id": "182003112547-1tm3l1i0kbdr249k2qknrhti8vl7j1j8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB91902_CqDLlSgG2NeADRBPdNL_FWWSsw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182003112547-1tm3l1i0kbdr249k2qknrhti8vl7j1j8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
