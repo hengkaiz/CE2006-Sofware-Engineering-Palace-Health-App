@@ -16,7 +16,9 @@
  package com.google.firebase.example.fireeats;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +28,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -46,6 +51,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.Transaction;
 
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
@@ -76,6 +82,11 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
 
     private RatingAdapter mRatingAdapter;
 
+    private String restaurantId;
+    private double restaurantLat;
+    private double restaurantLng;
+    private String restaurantName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,11 +102,13 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mEmptyView = findViewById(R.id.view_empty_ratings);
         mRatingsRecycler = findViewById(R.id.recycler_ratings);
 
+
         findViewById(R.id.restaurant_button_back).setOnClickListener(this);
         findViewById(R.id.fab_show_rating_dialog).setOnClickListener(this);
+        findViewById(R.id.show_directions).setOnClickListener(this);
 
         // Get restaurant ID from extras
-        String restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
+        restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
         if (restaurantId == null) {
             throw new IllegalArgumentException("Must pass extra " + KEY_RESTAURANT_ID);
         }
@@ -138,6 +151,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
 
         mRatingAdapter.startListening();
         mRestaurantRegistration = mRestaurantRef.addSnapshotListener(this);
+
     }
 
     @Override
@@ -161,12 +175,52 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
             case R.id.fab_show_rating_dialog:
                 onAddRatingClicked(v);
                 break;
+            case R.id.show_directions:
+                Intent intent = new Intent(RestaurantDetailActivity.this, MapsActivity.class);
+                intent.putExtra(MapsActivity.KEY_RESTAURANT_ID, restaurantId);
+                intent.putExtra(MapsActivity.RESTAURANT_LAT, restaurantLat);
+                intent.putExtra(MapsActivity.RESTAURANT_LNG, restaurantLng);
+                intent.putExtra(MapsActivity.RESTAURANT_NAME, restaurantName);
+                startActivity(intent);
+                break;
         }
     }
 
-    private Task<Void> addRating(final DocumentReference restaurantRef, final Rating rating) {
-        // TODO(developer): Implement
-        return Tasks.forException(new Exception("not yet implemented"));
+    private Task<Void> addRating(final DocumentReference restaurantRef,
+                                 final Rating rating) {
+        // Create reference for new rating, for use inside the transaction
+        final DocumentReference ratingRef = restaurantRef.collection("ratings")
+                .document();
+
+        // In a transaction, add the new rating and update the aggregate totals
+        return mFirestore.runTransaction(new Transaction.Function<Void>() {
+            @Override
+            public Void apply(Transaction transaction)
+                    throws FirebaseFirestoreException {
+
+                Restaurant restaurant = transaction.get(restaurantRef)
+                        .toObject(Restaurant.class);
+
+                // Compute new number of ratings
+                int newNumRatings = restaurant.getNumRatings() + 1;
+
+                // Compute new average rating
+                double oldRatingTotal = restaurant.getAvgRating() *
+                        restaurant.getNumRatings();
+                double newAvgRating = (oldRatingTotal + rating.getRating()) /
+                        newNumRatings;
+
+                // Set new restaurant info
+                restaurant.setNumRatings(newNumRatings);
+                restaurant.setAvgRating(newAvgRating);
+
+                // Commit to Firestore
+                transaction.set(restaurantRef, restaurant);
+                transaction.set(ratingRef, rating);
+
+                return null;
+            }
+        });
     }
 
     /**
@@ -189,6 +243,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mCityView.setText(restaurant.getCity());
         mCategoryView.setText(restaurant.getCategory());
         mPriceView.setText(RestaurantUtil.getPriceString(restaurant));
+
+        restaurantLat = restaurant.getX();
+        restaurantLng = restaurant.getY();
 
         // Background image
         Glide.with(mImageView.getContext())

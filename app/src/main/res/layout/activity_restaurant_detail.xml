@@ -118,13 +118,26 @@
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/show_directions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/fab_show_rating_dialog"
+        android:layout_alignBottom="@+id/fab_show_rating_dialog"
+        android:layout_marginEnd="74dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="-1dp"
+        android:clickable="true"
+        app:backgroundTint="#FF0000"
+        app:srcCompat="@drawable/ic_place_white_24px" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_show_rating_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/restaurant_top_card"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="-28dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="-28dp"
         app:srcCompat="@drawable/ic_add_white_24px" />
 
     <!-- Ratings -->
@@ -141,21 +154,27 @@
         tools:listitem="@layout/item_rating" />
 
     <!-- View for empty ratings -->
+
     <LinearLayout
         android:id="@+id/view_empty_ratings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_below="@+id/restaurant_top_card"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="105dp"
+        android:layout_marginBottom="6dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">
 
         <ImageView
-            android:src="@drawable/pizza_monster"
-            style="@style/AppTheme.PizzaGuy" />
+            style="@style/AppTheme.PizzaGuy"
+            android:src="@drawable/pizza_monster" />
 
         <TextView
             style="@style/AppTheme.Body1"
@@ -165,5 +184,4 @@
             android:textColor="@color/greyDisabled" />
 
     </LinearLayout>
-
 </RelativeLayout>
