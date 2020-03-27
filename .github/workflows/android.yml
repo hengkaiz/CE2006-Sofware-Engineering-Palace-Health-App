@@ -20,6 +20,6 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
     - name: reconfig file
-      run: dos2unix ./gradlew
+      run: sed $'s/\r$//' ./gradlew
     - name: Build with Gradle
       run: ./gradlew build
