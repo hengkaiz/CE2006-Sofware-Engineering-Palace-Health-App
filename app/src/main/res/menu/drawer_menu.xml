@@ -9,8 +9,13 @@
             android:title="Restaurants"/>
 
         <item
+            android:id="@+id/favourites_page"
+            android:icon="@drawable/ic_heart_white_icon"
+            android:title="Favourites"/>
+
+        <item
             android:id="@+id/profile_page"
-            android:icon="@drawable/ic_profile"
+            android:icon="@drawable/ic_profile_icon"
             android:title="Profile"/>
     </group>
 </menu>

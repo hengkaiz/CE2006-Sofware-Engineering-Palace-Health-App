@@ -101,10 +101,24 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_restaurants"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="581dp"
         android:layout_below="@+id/filter_bar_container"
         android:background="@android:color/white"
         tools:listitem="@layout/item_restaurant" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_bot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="#4285F4"
+        app:itemTextColor="@drawable/tab_color"
+        app:itemIconTint="@drawable/tab_color"
+        app:menu="@menu/drawer_menu">
+
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <!-- Shadow below toolbar -->
     <View
