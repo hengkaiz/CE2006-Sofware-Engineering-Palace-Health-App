@@ -19,5 +19,7 @@ jobs:
         java-version: 1.8
     - name: Make gradlew executable
       run: chmod +x ./gradlew
+    - name: reconfig file
+      run: dos2unix ./gradlew
     - name: Build with Gradle
       run: ./gradlew build
