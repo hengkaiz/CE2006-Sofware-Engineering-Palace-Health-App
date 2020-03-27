@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "182003112547-isr5o5sricokgn2lab8gf1vdsq7ro2b8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.google.firebase.se.palace.health",
-            "certificate_hash": "3f1c0101897addd52ae7b4a271fca1867aa4c1fd"
-          }
-        },
-        {
           "client_id": "182003112547-mkp6k0e686cof7o7jv61ivq8kfj2hsph.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
