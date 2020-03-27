@@ -36,11 +36,13 @@ public class Restaurant {
     private int price;
     private int numRatings;
     private double avgRating;
+    private double x;
+    private double y;
 
     public Restaurant() {}
 
     public Restaurant(String name, String city, String category, String photo,
-                      int price, int numRatings, double avgRating) {
+                      int price, int numRatings, double avgRating, double x, double y) {
         this.name = name;
         this.city = city;
         this.category = category;
@@ -48,6 +50,16 @@ public class Restaurant {
         this.price = price;
         this.numRatings = numRatings;
         this.avgRating = avgRating;
+        this.x = x;
+        this.y = y;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
     }
 
     public String getName() {

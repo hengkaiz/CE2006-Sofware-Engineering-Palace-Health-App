@@ -189,19 +189,6 @@ public class MainActivity extends AppCompatActivity implements
         startActivityForResult(intent, RC_ADD_USER_INFO);
     }
 
-    private void onAddItemsClicked() {
-        // Get a reference to the restaurants collection
-        CollectionReference restaurants = mFirestore.collection("restaurants");
-
-        for (int i = 0; i < 10; i++) {
-            // Get a random Restaurant POJO
-            Restaurant restaurant = RestaurantUtil.getRandom(this);
-
-            // Add a new document to the restaurants collection
-            restaurants.add(restaurant);
-        }
-    }
-
     @Override
     public void onFilter(Filters filters) {
         // Construct query basic query
@@ -240,26 +227,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // Save filters
         mViewModel.setFilters(filters);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_add_items:
-                onAddItemsClicked();
-                break;
-            case R.id.menu_sign_out:
-                AuthUI.getInstance().signOut(this);
-                startSignIn();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
