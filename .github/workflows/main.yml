@@ -9,9 +9,5 @@ jobs:
       - uses: actions/checkout@v2
 
       # Run the Firebase Test Lab Action
-      - name: Run tests on Firebase Test Lab
-        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
-        with:
-          arg-spec: 'tests.yml:android-pixel-4'
-        env:
-          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
+      - name: Android Builder
+        uses: b4s36t4/Android-Action@0.0.1
