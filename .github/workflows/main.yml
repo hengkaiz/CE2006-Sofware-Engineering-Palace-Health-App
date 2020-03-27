@@ -1,44 +1,48 @@
-image: openjdk:8-jdk
+name: Android CI
 
-variables:
-  ANDROID_COMPILE_SDK: "28"
-  ANDROID_BUILD_TOOLS: "28.0.2"
-  ANDROID_SDK_TOOLS:   "4333796"
+on: [push,pull_request]
 
-before_script:
-  - apt-get --quiet update --yes
-  - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
-  - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip
-  - unzip -d android-sdk-linux android-sdk.zip
-  - echo y | android-sdk-linux/tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}" >/dev/null
-  - echo y | android-sdk-linux/tools/bin/sdkmanager "platform-tools" >/dev/null
-  - echo y | android-sdk-linux/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}" >/dev/null
-  - export ANDROID_HOME=$PWD/android-sdk-linux
-  - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/
-  - chmod +x ./gradlew
-  # temporarily disable checking for EPIPE error and use yes to accept all licenses
-  - set +o pipefail
-  - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
-  - set -o pipefail
-
-stages:
-  - build
-  - test
-
-lintDebug:
-  stage: build
-  script:
-    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
-
-assembleDebug:
-  stage: build
-  script:
-    - ./gradlew assembleDebug
-  artifacts:
-    paths:
-    - app/build/outputs/
-
-debugTests:
-  stage: test
-  script:
-    - ./gradlew -Pci --console=plain :app:testDebug
+jobs:
+  build:
+    name: Android Compilation Test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Checkout all submodules
+      uses: textbook/git-checkout-submodule-action@2.0.0
+    - name: set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Copy secure values
+      run: echo $GOOGLE_SERVICES > ./app/google-services.json
+      env:
+        GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+    - name: Make Gradle executable
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build
+  device-test:
+    runs-on: macos-latest
+    name: Android Device Test Runner
+    steps:
+    - name: checkout
+      uses: actions/checkout@v1
+    - name: Checkout all submodules
+      run: git submodule update --init --recursive
+    - name: Copy secure values
+      run: echo $GOOGLE_SERVICES > ./app/google-services.json
+      env:
+        GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+    - name: Make Gradle executable
+      run: chmod +x gradlew
+    - name: List Available Android Devices
+      run: $ANDROID_HOME/tools/bin/avdmanager list
+    - name: run tests
+      uses: reactivecircus/android-emulator-runner@v1
+      with:
+        api-level: 28
+        target: google_apis
+        profile: 'pixel_xl'
+        arch: x86_64
+        script: ./gradlew connectedAndroidTest
