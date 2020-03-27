@@ -17,9 +17,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
     - name: reconfig file
       run: sed $'s/\r$//' ./gradlew > ./gradlew_unix
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew_unix
     - name: Build with Gradle
       run: ./gradlew_unix build
