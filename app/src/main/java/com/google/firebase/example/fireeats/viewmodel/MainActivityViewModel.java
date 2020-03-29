@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package com.google.firebase.palacehealth;
+ package com.google.firebase.example.fireeats.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.palacehealth.Filters;
-import com.google.firebase.palacehealth.MainActivity;
+import com.google.firebase.example.fireeats.Filters;
 
 /**
- * ViewModel for {@link MainActivity}.
+ * ViewModel for {@link com.google.firebase.example.fireeats.MainActivity}.
  */
 
 public class MainActivityViewModel extends ViewModel {

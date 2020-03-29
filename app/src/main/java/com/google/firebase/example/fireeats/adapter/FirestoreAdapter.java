@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package com.google.firebase.palacehealth.adapter;
+ package com.google.firebase.example.fireeats.adapter;
 
 import android.util.Log;
 import android.view.ViewGroup;
@@ -29,6 +29,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 
 /**
  * RecyclerView adapter for displaying the results of a Firestore {@link Query}.
