@@ -10,15 +10,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.example.fireeats.R;
+import com.google.firebase.example.fireeats.model.User;
+import com.google.firebase.example.fireeats.util.HealthRiskUtil;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,9 +32,12 @@ public class EnterUserInfoActivity extends AppCompatActivity
     private EditText mCholesterol;
     private EditText mBloodPressure;
     private String uid;
-    private String sex = "Male";
-    private String treatedForHBP = "No";
-    private String diabetic = "No";
+    private String mSex = "Male";
+    private String mTreatedForHBP = "No";
+    private String mDiabetic = "No";
+    private String mSmoke = "No";
+    private int mActivityLevel = 0;
+    private String mHistoryHeartDisease = "No";
 
     private FirebaseFirestore mFirestore;
 
@@ -62,7 +63,16 @@ public class EnterUserInfoActivity extends AppCompatActivity
         findViewById(R.id.user_treated_for_hbp_no).setOnClickListener(this);
         findViewById(R.id.user_diabetic_yes).setOnClickListener(this);
         findViewById(R.id.user_diabetic_no).setOnClickListener(this);
-        findViewById(R.id.enter_info_button_back).setOnClickListener(this);
+        findViewById(R.id.enter_info_button_back2).setOnClickListener(this);
+        findViewById(R.id.enter_info_button_next2).setOnClickListener(this);
+
+        findViewById(R.id.user_smoke_yes).setOnClickListener(this);
+        findViewById(R.id.user_smoke_no).setOnClickListener(this);
+        findViewById(R.id.user_activity_level_none).setOnClickListener(this);
+        findViewById(R.id.user_activity_level_low).setOnClickListener(this);
+        findViewById(R.id.user_activity_level_medium).setOnClickListener(this);
+        findViewById(R.id.user_activity_level_high).setOnClickListener(this);
+        findViewById(R.id.enter_info_button_back3).setOnClickListener(this);
         findViewById(R.id.enter_info_button_submit).setOnClickListener(this);
 
         // Enable Firestore logging
@@ -80,10 +90,10 @@ public class EnterUserInfoActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_sex_male_button:
-                sex = "Male";
+                mSex = "Male";
                 break;
             case R.id.user_sex_female_button:
-                sex = "Female";
+                mSex = "Female";
                 break;
             case R.id.enter_info_button_next:
                 goToSecondPage();
@@ -91,24 +101,59 @@ public class EnterUserInfoActivity extends AppCompatActivity
 
             // Second page buttons
             case R.id.user_treated_for_hbp_yes:
-                treatedForHBP = "Yes";
+                mTreatedForHBP = "Yes";
                 break;
             case R.id.user_treated_for_hbp_no:
-                treatedForHBP = "No";
+                mTreatedForHBP = "No";
                 break;
             case R.id.user_diabetic_yes:
-                diabetic = "Yes";
+                mDiabetic = "Yes";
                 break;
             case R.id.user_diabetic_no:
-                diabetic = "No";
+                mDiabetic = "No";
                 break;
-            case R.id.enter_info_button_back:
+            case R.id.enter_info_button_back2:
                 goToFirstPage();
+                break;
+            case R.id.enter_info_button_next2:
+                goToThirdPage();
+                break;
+
+            // Third page buttons
+            case R.id.user_smoke_yes:
+                mSmoke = "Yes";
+                break;
+            case R.id.user_smoke_no:
+                mSmoke = "No";
+                break;
+            case R.id.user_activity_level_none:
+                mActivityLevel = 0;
+                break;
+            case R.id.user_activity_level_low:
+                mActivityLevel = 1;
+                break;
+            case R.id.user_activity_level_medium:
+                mActivityLevel = 2;
+                break;
+            case R.id.user_activity_level_high:
+                mActivityLevel = 3;
+                break;
+            case R.id.enter_info_button_back3:
+                goToSecondPage();
                 break;
             case R.id.enter_info_button_submit:
                 enterUserInfoToDb();
                 break;
+
+            default:
+                goToFirstPage();
+                break;
         }
+    }
+
+    // Go to second page of activity
+    private void goToThirdPage(){
+        updateUI(3);
     }
 
     // Go to second page of activity
@@ -125,12 +170,20 @@ public class EnterUserInfoActivity extends AppCompatActivity
     // Update UI of layout
     private void updateUI(int page) {
         if (page == 1) {
+            findViewById(R.id.main_layout3).setVisibility(View.GONE);
             findViewById(R.id.main_layout2).setVisibility(View.GONE);
             findViewById(R.id.main_layout1).setVisibility(View.VISIBLE);
 
-        } else {
-            findViewById(R.id.main_layout1).setVisibility(View.GONE);
+        }
+        else if (page == 2){
+            findViewById(R.id.main_layout3).setVisibility(View.GONE);
             findViewById(R.id.main_layout2).setVisibility(View.VISIBLE);
+            findViewById(R.id.main_layout1).setVisibility(View.GONE);
+        }
+        else if (page == 3){
+            findViewById(R.id.main_layout3).setVisibility(View.VISIBLE);
+            findViewById(R.id.main_layout2).setVisibility(View.GONE);
+            findViewById(R.id.main_layout1).setVisibility(View.GONE);
         }
     }
 
@@ -139,7 +192,7 @@ public class EnterUserInfoActivity extends AppCompatActivity
         Map<String, Object> user = new HashMap<>();
         user.put("name", mUserName.getText().toString());
         user.put("age", Integer.parseInt(mAge.getText().toString()));
-        user.put("sex", sex);
+        user.put("sex", mSex);
         user.put("height", Integer.parseInt(mHeight.getText().toString()));
         user.put("weight", Integer.parseInt(mWeight.getText().toString()));
 
@@ -147,12 +200,19 @@ public class EnterUserInfoActivity extends AppCompatActivity
             user.put("cholesterol", -1);
         }
         else{ user.put("cholesterol", Integer.parseInt(mCholesterol.getText().toString())); }
+
         if(TextUtils.isEmpty(mBloodPressure.getText().toString())){
             user.put("blood pressure", -1);
         }
         else{ user.put("blood pressure", Integer.parseInt(mBloodPressure.getText().toString())); }
-        user.put("treated for hbp", treatedForHBP);
-        user.put("diabetic", diabetic);
+
+        user.put("treated for hbp", mTreatedForHBP);
+        user.put("diabetic", mDiabetic);
+        user.put("smoker", mSmoke);
+        user.put("activity level", mActivityLevel);
+        user.put("history heart disease", mHistoryHeartDisease);
+
+        user = calculateData(user);
 
         mFirestore.collection("users").document(uid)
                 .set(user)
@@ -173,6 +233,31 @@ public class EnterUserInfoActivity extends AppCompatActivity
         returnIntent.putExtra("result", "success!");
         setResult(Activity.RESULT_OK,returnIntent);
         finish();
+    }
+
+    // Use HealthRiskUtil to calculate BMI and Risk level
+    private Map calculateData(Map user_hash){
+        User user = new User(user_hash.get("name").toString(),
+                (int)user_hash.get("age"),
+                (int)user_hash.get("blood pressure"),
+                (int)user_hash.get("cholesterol"),
+                user_hash.get("diabetic").toString(),
+                (int)user_hash.get("height"),
+                user_hash.get("sex").toString(),
+                user_hash.get("treated for hbp").toString(),
+                (int)user_hash.get("weight"),
+                user_hash.get("smoker").toString(),
+                (int)user_hash.get("activity level"),
+                user_hash.get("history heart disease").toString());
+
+        HealthRiskUtil healthRiskUtil = new HealthRiskUtil(user);
+
+        user_hash.put("bmi", healthRiskUtil.calBMI());
+        user_hash.put("riskRF", healthRiskUtil.calRiskRF());
+        user_hash.put("riskAge", healthRiskUtil.calRiskAge());
+        user_hash.put("total risk", healthRiskUtil.calTotalRisk());
+
+        return user_hash;
     }
 
     private boolean validateForm() {
