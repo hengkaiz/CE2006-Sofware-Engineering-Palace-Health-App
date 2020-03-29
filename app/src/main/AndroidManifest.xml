@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.firebase.example.fireeats">
+    package="com.google.firebase.palacehealth.fireeats">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -32,17 +32,17 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name="com.google.firebase.palacehealth.fireeats.com.google.firebase.palacehealth.MapsActivity"
             android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".EnterUserInfoActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.google.firebase.palacehealth.fireeats.com.google.firebase.palacehealth.EnterUserInfoActivity" />
+        <activity android:name="com.google.firebase.palacehealth.fireeats.com.google.firebase.palacehealth.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RestaurantDetailActivity" />
+        <activity android:name="com.google.firebase.palacehealth.fireeats.com.google.firebase.palacehealth.RestaurantDetailActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package com.google.firebase.example.fireeats;
+ package com.google.firebase.palacehealth;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,22 +27,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.example.fireeats.adapter.RatingAdapter;
-import com.google.firebase.example.fireeats.model.Rating;
-import com.google.firebase.example.fireeats.model.Restaurant;
-import com.google.firebase.example.fireeats.util.RestaurantUtil;
+import com.google.firebase.palacehealth.adapter.RatingAdapter;
+import com.google.firebase.palacehealth.fireeats.R;
+import com.google.firebase.palacehealth.model.Rating;
+import com.google.firebase.palacehealth.model.Restaurant;
+import com.google.firebase.palacehealth.util.RestaurantUtil;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
