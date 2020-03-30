@@ -241,7 +241,6 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
                 break;
             case R.id.show_directions:
                 Intent intent = new Intent(RestaurantDetailActivity.this, MapsActivity.class);
-                intent.putExtra(MapsActivity.KEY_RESTAURANT_ID, restaurantId);
                 intent.putExtra(MapsActivity.RESTAURANT_LAT, restaurantLat);
                 intent.putExtra(MapsActivity.RESTAURANT_LNG, restaurantLng);
                 intent.putExtra(MapsActivity.RESTAURANT_NAME, restaurantName);
