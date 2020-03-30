@@ -7,6 +7,18 @@
     android:background="#E0E0E0"
     tools:context="com.google.firebase.example.fireeats.FavoritesActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppTheme"
+        app:logo="@drawable/ic_heart_white_icon"
+        app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
+        app:title="Favorites"
+        app:titleMarginStart="24dp"
+        app:titleTextColor="@android:color/white" />
+
     <!-- Bottom navigation bar-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_bot"
@@ -25,6 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/nav_bot"
+        android:layout_below="@+id/toolbar"
         android:gravity ="top"
         android:layout_marginBottom="0dp"
         android:background="@android:color/white"

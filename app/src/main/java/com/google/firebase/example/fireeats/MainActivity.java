@@ -2,6 +2,7 @@ package com.google.firebase.example.fireeats;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -268,6 +270,8 @@ public class MainActivity extends AppCompatActivity implements
                             overridePendingTransition(0,0);
                             break;
                         case R.id.profile_page:
+                            startActivity(new Intent(getBaseContext(), ProfileActivity.class));
+                            overridePendingTransition(0,0);
                             break;
                     }
                 return true;

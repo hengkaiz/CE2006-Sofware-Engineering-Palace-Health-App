@@ -151,6 +151,8 @@ public class FavoritesActivity extends AppCompatActivity implements
                         case R.id.favorites_page:
                             break;
                         case R.id.profile_page:
+                            startActivity(new Intent(getBaseContext(), ProfileActivity.class));
+                            overridePendingTransition(0,0);
                             break;
                     }
                     return true;

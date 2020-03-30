@@ -24,20 +24,6 @@
         android:weightSum="4"
         android:visibility="visible">
 
-        <EditText
-            android:id="@+id/user_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/greyPrimary"
-            android:ems="10"
-            android:gravity="center"
-            android:inputType="textPersonName"
-            android:layout_gravity="center"
-            android:hint="Name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <RadioGroup
             android:id="@+id/user_sex"
             android:layout_width="231dp"
@@ -47,8 +33,7 @@
             android:layout_gravity="center"
             app:layout_constraintBottom_toTopOf="@+id/user_age"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_id">
+            app:layout_constraintStart_toStartOf="parent">
 
             <RadioButton
                 android:id="@+id/user_sex_male_button"

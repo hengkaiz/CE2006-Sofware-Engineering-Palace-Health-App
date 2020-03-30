@@ -35,7 +35,7 @@ public class User {
     public User() {
     }
 
-    public User(String name, int age, int bloodPressure, int cholesterol, String diabetic, int height, String sex, String treatedHBP, int weight, String smoke, int activityLevel, String historyHeartDisease) {
+    public User(String name, int age, int bloodPressure, int cholesterol, String diabetic, int height, String sex, String treatedHBP, int weight, String smoke, int activityLevel, String historyHeartDisease, double bmi, double riskRF, double riskAge, int totalRisk) {
         this.name = name;
         this.age = age;
         this.bloodPressure = bloodPressure;
@@ -48,6 +48,10 @@ public class User {
         this.smoke = smoke;
         this.activityLevel = activityLevel;
         this.historyHeartDisease = historyHeartDisease;
+        this.bmi = bmi;
+        this.riskRF = riskRF;
+        this.riskAge = riskAge;
+        this.totalRisk = totalRisk;
     }
 
     public String getName() {

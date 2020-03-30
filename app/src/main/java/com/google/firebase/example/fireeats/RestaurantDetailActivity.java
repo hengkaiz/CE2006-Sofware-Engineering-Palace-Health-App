@@ -86,6 +86,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
     private ViewGroup mEmptyView;
     private RecyclerView mRatingsRecycler;
 
+    private TextView mRestaurantDetails;
+    private TextView mRestaurantOpeningHours;
+    private TextView mRestaurantGoodForDetails;
+
     private RatingDialogFragment mRatingDialog;
 
     private FirebaseFirestore mFirestore;
@@ -115,6 +119,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mPriceView = findViewById(R.id.restaurant_price);
         mEmptyView = findViewById(R.id.view_empty_ratings);
         mRatingsRecycler = findViewById(R.id.recycler_ratings);
+
+        mRestaurantDetails = findViewById(R.id.restaurant_details);
+        mRestaurantOpeningHours = findViewById(R.id.restaurant_opening_hours);
+        mRestaurantGoodForDetails = findViewById(R.id.restaurant_good_for_details);
 
 
         findViewById(R.id.restaurant_button_back).setOnClickListener(this);
@@ -358,6 +366,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mCityView.setText(restaurant.getCity());
         mCategoryView.setText(restaurant.getCategory());
         mPriceView.setText(RestaurantUtil.getPriceString(restaurant));
+        mRestaurantDetails.setText(restaurant.getDescription());
+        // mRestaurantOpeningHours.setText();
+        // mRestaurantGoodForDetails.setText();
 
         restaurantLat = restaurant.getX();
         restaurantLng = restaurant.getY();

@@ -25,7 +25,6 @@ public class EnterUserInfoActivity extends AppCompatActivity
         implements View.OnClickListener{
 
     private static final String TAG = "LOG";
-    private EditText mUserName;
     private EditText mAge;
     private EditText mHeight;
     private EditText mWeight;
@@ -47,7 +46,6 @@ public class EnterUserInfoActivity extends AppCompatActivity
         setContentView(R.layout.activity_enter_user_info);
 
         // Views
-        mUserName = findViewById(R.id.user_id);
         mAge = findViewById(R.id.user_age);
         mHeight = findViewById(R.id.user_height);
         mWeight = findViewById(R.id.user_weight);
@@ -190,27 +188,27 @@ public class EnterUserInfoActivity extends AppCompatActivity
     // Store user information in Firestore
     private void enterUserInfoToDb(){
         Map<String, Object> user = new HashMap<>();
-        user.put("name", mUserName.getText().toString());
+        user.put("name", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         user.put("age", Integer.parseInt(mAge.getText().toString()));
         user.put("sex", mSex);
         user.put("height", Integer.parseInt(mHeight.getText().toString()));
         user.put("weight", Integer.parseInt(mWeight.getText().toString()));
 
         if(TextUtils.isEmpty(mCholesterol.getText().toString())){
-            user.put("cholesterol", -1);
+            user.put("cholesterol", 6);
         }
         else{ user.put("cholesterol", Integer.parseInt(mCholesterol.getText().toString())); }
 
         if(TextUtils.isEmpty(mBloodPressure.getText().toString())){
-            user.put("blood pressure", -1);
+            user.put("bloodPressure", 120);
         }
-        else{ user.put("blood pressure", Integer.parseInt(mBloodPressure.getText().toString())); }
+        else{ user.put("bloodPressure", Integer.parseInt(mBloodPressure.getText().toString())); }
 
-        user.put("treated for hbp", mTreatedForHBP);
+        user.put("treatedHBP", mTreatedForHBP);
         user.put("diabetic", mDiabetic);
-        user.put("smoker", mSmoke);
-        user.put("activity level", mActivityLevel);
-        user.put("history heart disease", mHistoryHeartDisease);
+        user.put("smoke", mSmoke);
+        user.put("activityLevel", mActivityLevel);
+        user.put("historyHeartDisease", mHistoryHeartDisease);
 
         user = calculateData(user);
 
@@ -239,37 +237,33 @@ public class EnterUserInfoActivity extends AppCompatActivity
     private Map calculateData(Map user_hash){
         User user = new User(user_hash.get("name").toString(),
                 (int)user_hash.get("age"),
-                (int)user_hash.get("blood pressure"),
+                (int)user_hash.get("bloodPressure"),
                 (int)user_hash.get("cholesterol"),
                 user_hash.get("diabetic").toString(),
                 (int)user_hash.get("height"),
                 user_hash.get("sex").toString(),
-                user_hash.get("treated for hbp").toString(),
+                user_hash.get("treatedHBP").toString(),
                 (int)user_hash.get("weight"),
-                user_hash.get("smoker").toString(),
-                (int)user_hash.get("activity level"),
-                user_hash.get("history heart disease").toString());
+                user_hash.get("smoke").toString(),
+                (int)user_hash.get("activityLevel"),
+                user_hash.get("historyHeartDisease").toString(),
+                0,
+                0,
+                0,
+                0);
 
         HealthRiskUtil healthRiskUtil = new HealthRiskUtil(user);
 
         user_hash.put("bmi", healthRiskUtil.calBMI());
         user_hash.put("riskRF", healthRiskUtil.calRiskRF());
         user_hash.put("riskAge", healthRiskUtil.calRiskAge());
-        user_hash.put("total risk", healthRiskUtil.calTotalRisk());
+        user_hash.put("totalRisk", healthRiskUtil.calTotalRisk());
 
         return user_hash;
     }
 
     private boolean validateForm() {
         boolean valid = true;
-
-        String username = mUserName.getText().toString();
-        if (TextUtils.isEmpty(username)) {
-            mUserName.setError("Required.");
-            valid = false;
-        } else {
-            mUserName.setError(null);
-        }
 
         String age = mAge.getText().toString();
         if (TextUtils.isEmpty(age)) {
