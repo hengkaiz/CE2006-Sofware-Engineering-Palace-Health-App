@@ -42,11 +42,12 @@ public class Restaurant {
     private double y;
     private int postal;
     private List<String> liked = new ArrayList<String>();
+    private String description;
 
     public Restaurant() {}
 
     public Restaurant(String name, String city, String category, String photo,
-                      int price, int numRatings, double avgRating, double x, double y, int postal, List<String>liked) {
+                      int price, int numRatings, double avgRating, double x, double y, int postal, List<String>liked, String discription) {
         this.name = name;
         this.city = city;
         this.category = category;
@@ -58,6 +59,7 @@ public class Restaurant {
         this.y = y;
         this.postal = postal;
         this.liked = liked;
+        this.description = description;
     }
 
     public double getX() {
@@ -146,5 +148,13 @@ public class Restaurant {
 
     public void setLiked(List<String> liked) {
         this.liked = liked;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -155,6 +155,7 @@
         app:backgroundTint="#4CAF50"
         app:srcCompat="@drawable/ic_place_white_24px" />
 
+    <!-- Ratings -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_show_rating_dialog"
         android:layout_width="wrap_content"
@@ -164,51 +165,142 @@
         android:layout_alignParentRight="true"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="-28dp"
+        android:layout_marginBottom="-30dp"
         app:srcCompat="@drawable/ic_add_white_24px" />
 
-    <!-- Ratings -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_ratings"
+
+    <LinearLayout
+        android:id="@+id/restaurant_details_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/restaurant_top_card"
-        android:background="@android:color/transparent"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
-        android:paddingTop="28dp"
-        android:visibility="gone"
-        tools:listitem="@layout/item_rating" />
-
-    <!-- View for empty ratings -->
-
-    <LinearLayout
-        android:id="@+id/view_empty_ratings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/restaurant_top_card"
-        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="106dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="105dp"
-        android:layout_marginBottom="6dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="4dp"
+        android:orientation="vertical">
 
-        <ImageView
-            style="@style/AppTheme.PizzaGuy"
-            android:src="@drawable/pizza_monster" />
+        <LinearLayout
+            android:id="@+id/restaurant_details_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="4dp"
+            android:background="#4285F4"
+            android:orientation="vertical">
 
-        <TextView
-            style="@style/AppTheme.Body1"
+            <!-- Restaurant details-->
+            <TextView
+                android:id="@+id/restaurant_details_header"
+                style="@style/AppTheme.Subheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:text="About" />
+
+            <TextView
+                android:id="@+id/restaurant_details"
+                style="@style/AppTheme.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="4dp"
+                android:textColor="@android:color/white"
+                tools:text="Long details about 2 sentences long should do the trick i think af akldf;jalfjal;wejfl;awekfjl;aekwjfkl;awejfawef" />
+
+            <!-- Opening hours-->
+            <TextView
+                android:id="@+id/restaurant_opening_hours_header"
+                style="@style/AppTheme.Subheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:text="Opening Hours" />
+
+            <TextView
+                android:id="@+id/restaurant_opening_hours"
+                style="@style/AppTheme.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="3dp"
+                android:textColor="@android:color/white"
+                tools:text="Mon - Sun : 9am to 9pm" />
+
+            <!-- Good for health conditions-->
+            <TextView
+                android:id="@+id/restaurant_good_for_header"
+                style="@style/AppTheme.Subheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:text="Low in" />
+
+            <TextView
+                android:id="@+id/restaurant_good_for_details"
+                style="@style/AppTheme.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/white"
+                tools:text="Salt, Sugar" />
+        </LinearLayout>
+
+        <!-- View for empty ratings -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_ratings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:clipToPadding="false"
+            android:paddingBottom="16dp"
+            android:visibility="gone"
+            tools:listitem="@layout/item_rating" />
+
+        <LinearLayout
+            android:id="@+id/view_empty_ratings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/message_no_reviews"
-            android:textColor="@color/greyDisabled" />
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="106dp"
+            android:layout_marginEnd="105dp"
+            android:layout_marginBottom="6dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
 
+            <ImageView
+                style="@style/AppTheme.PizzaGuy"
+                android:src="@drawable/pizza_monster" />
+
+            <TextView
+                style="@style/AppTheme.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/message_no_reviews"
+                android:textColor="@color/greyDisabled" />
+
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
