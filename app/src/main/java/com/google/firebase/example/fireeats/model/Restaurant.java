@@ -17,6 +17,9 @@
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Restaurant POJO.
  */
@@ -37,11 +40,13 @@ public class Restaurant {
     private double avgRating;
     private double x;
     private double y;
+    private int postal;
+    private List<String> liked = new ArrayList<String>();
 
     public Restaurant() {}
 
     public Restaurant(String name, String city, String category, String photo,
-                      int price, int numRatings, double avgRating, double x, double y) {
+                      int price, int numRatings, double avgRating, double x, double y, int postal, List<String>liked) {
         this.name = name;
         this.city = city;
         this.category = category;
@@ -51,6 +56,8 @@ public class Restaurant {
         this.avgRating = avgRating;
         this.x = x;
         this.y = y;
+        this.postal = postal;
+        this.liked = liked;
     }
 
     public double getX() {
@@ -115,5 +122,29 @@ public class Restaurant {
 
     public void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public int getPostal() {
+        return postal;
+    }
+
+    public void setPostal(int postal) {
+        this.postal = postal;
+    }
+
+    public List<String> getLiked() {
+        return liked;
+    }
+
+    public void setLiked(List<String> liked) {
+        this.liked = liked;
     }
 }

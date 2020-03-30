@@ -118,16 +118,41 @@
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/favorite_restaurant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fab_show_rating_dialog"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="-1dp"
+        android:layout_toStartOf="@+id/show_directions"
+        android:clickable="true"
+        app:backgroundTint="#FF0000"
+        app:srcCompat="@drawable/ic_heart_white_icon"
+        android:visibility="visible"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/unfavorite_restaurant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fab_show_rating_dialog"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="-1dp"
+        android:layout_toStartOf="@+id/show_directions"
+        android:clickable="true"
+        app:backgroundTint="#FF0000"
+        app:srcCompat="@drawable/ic_clear_white"
+        android:visibility="gone"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/show_directions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/fab_show_rating_dialog"
         android:layout_alignBottom="@+id/fab_show_rating_dialog"
-        android:layout_marginEnd="74dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="5dp"
         android:layout_marginBottom="-1dp"
+        android:layout_toStartOf="@+id/fab_show_rating_dialog"
         android:clickable="true"
-        app:backgroundTint="#FF0000"
+        app:backgroundTint="#4CAF50"
         app:srcCompat="@drawable/ic_place_white_24px" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -135,8 +160,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/restaurant_top_card"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginBottom="-28dp"
         app:srcCompat="@drawable/ic_add_white_24px" />
 

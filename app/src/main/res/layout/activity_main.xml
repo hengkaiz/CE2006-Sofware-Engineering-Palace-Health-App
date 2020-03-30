@@ -101,8 +101,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_restaurants"
         android:layout_width="match_parent"
-        android:layout_height="581dp"
+        android:layout_height="533dp"
+        android:layout_above="@+id/nav_bot"
         android:layout_below="@+id/filter_bar_container"
+        android:layout_marginBottom="0dp"
         android:background="@android:color/white"
         tools:listitem="@layout/item_restaurant" />
 

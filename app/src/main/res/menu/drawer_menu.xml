@@ -4,14 +4,14 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/restuarant_page"
+            android:id="@+id/restaurant_page"
             android:icon="@drawable/ic_restaurant_icon"
             android:title="Restaurants"/>
 
         <item
-            android:id="@+id/favourites_page"
+            android:id="@+id/favorites_page"
             android:icon="@drawable/ic_heart_white_icon"
-            android:title="Favourites"/>
+            android:title="Favorites"/>
 
         <item
             android:id="@+id/profile_page"
