@@ -4,6 +4,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsRoute;
 
+import java.io.Serializable;
+
 public class PolylineData {
     private Polyline polyline;
     private DirectionsLeg directionsLeg;

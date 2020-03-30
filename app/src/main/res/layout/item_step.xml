@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_step"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:paddingTop="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <TextView
+        android:id="@+id/step_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:ellipsize="end"
+        android:maxWidth="120dp"
+        android:maxLines="2"
+        android:textColor="@color/greyPrimary"/>
+
+    <TextView
+        android:id="@+id/step_duration"
+        android:layout_width="182dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/step_description"
+        android:layout_alignStart="@+id/step_description"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxWidth="120dp"
+        android:maxLines="1"
+        android:textColor="@color/greyPrimary" />
+
+    <TextView
+        android:id="@+id/step_distance"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/step_description"
+        android:layout_alignStart="@+id/step_description"
+        android:layout_alignEnd="@+id/step_description"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="189dp"
+        android:layout_marginLeft="205dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="0dp"
+        android:ellipsize="end"
+        android:maxWidth="120dp"
+        android:maxLines="1"
+        android:textColor="@color/greyPrimary" />
+
+</RelativeLayout>
