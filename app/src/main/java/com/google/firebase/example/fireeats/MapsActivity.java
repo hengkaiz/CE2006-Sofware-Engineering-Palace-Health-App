@@ -1,18 +1,11 @@
 package com.google.firebase.example.fireeats;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,18 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Layout;
-import android.text.style.BulletSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,36 +29,27 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.example.fireeats.adapter.StepAdapter;
 import com.google.firebase.example.fireeats.model.PolylineData;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PendingResult;
 import com.google.maps.internal.PolylineEncoding;
 import com.google.maps.model.DirectionsResult;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.maps.model.DirectionsRoute;
 import com.google.maps.model.DirectionsStep;
-import com.google.type.LatLngOrBuilder;
+import com.google.maps.model.TravelMode;
 
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         View.OnClickListener,
         GoogleMap.OnPolylineClickListener{
-        //GoogleMap.OnInfoWindowClickListener{
-        ///GoogleMap.OnMyLocationButtonClickListener,
-        //GoogleMap.OnMyLocationClickListener {
-    //GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "Map";
     public static final String RESTAURANT_LNG = "restaurant_lat";
@@ -79,13 +57,8 @@ public class MapsActivity extends AppCompatActivity implements
     public static final String RESTAURANT_NAME = "restaurant_name";
 
     private GoogleMap mMap;
-
     private FirebaseFirestore mFirestore;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    /*private Button mBtnDriving;
-    private Button mBtnTransit;
-    private Button mBtnWalk;*/
+    private GeoApiContext geoApiContext = null;
 
     private double restaurantLat;
     private double restaurantLng;
@@ -96,15 +69,17 @@ public class MapsActivity extends AppCompatActivity implements
     private LatLng userCoor;
     private Marker restaurantMarker;
     private Marker userMarker;
-
-    private GeoApiContext geoApiContext = null;
     private ArrayList<PolylineData> polylineData = new ArrayList<>();
+    private List<DirectionsStep> stepList = new ArrayList<>();;
 
     private SupportMapFragment mapFragment;
-    private Button mBtnGetDirections;
     private RecyclerView mDirectionsRecycler;
     private RecyclerView.Adapter adapter;
-    private List<DirectionsStep> stepList = new ArrayList<>();;
+    private LinearLayout mModeLayout;
+    private Button mBtnGetDirections;
+    private Button mBtnDriving;
+    private Button mBtnTransit;
+    private Button mBtnWalk;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -117,11 +92,15 @@ public class MapsActivity extends AppCompatActivity implements
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //setup GeoApiContext for directions api
         if (geoApiContext == null) {
             geoApiContext = new GeoApiContext.Builder().apiKey(getString(R.string.google_maps_key)).build();
         }
 
+        //set up Firestore
         mFirestore = FirebaseFirestore.getInstance();
+
+        //get extras
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
             throw new IllegalArgumentException("Must pass extra ");
@@ -134,18 +113,22 @@ public class MapsActivity extends AppCompatActivity implements
             Log.d(TAG, "onCreate: name " + restaurantName);
         }
 
-        //set up button
+        //set up layouts
+        mModeLayout = findViewById(R.id.modeLayout);
+        mDirectionsRecycler = findViewById(R.id.directionsRecycler);
+        mDirectionsRecycler.setHasFixedSize(false);
+        mDirectionsRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+        //set up buttons
         mBtnGetDirections = findViewById(R.id.btnGetDirections);
         mBtnGetDirections.setOnClickListener(this);
         findViewById(R.id.map_back_button).setOnClickListener(this);
-        /*mBtnDriving = findViewById(R.id.btnDriving);
+        mBtnDriving = findViewById(R.id.btnDriving);
+        mBtnDriving.setOnClickListener(this);
         mBtnTransit = findViewById(R.id.btnTransit);
-        mBtnWalk = findViewById(R.id.btnWalk);*/
-
-        mDirectionsRecycler = findViewById(R.id.directionsRecycler);
-        mDirectionsRecycler.setHasFixedSize(false);
-        mDirectionsRecycler.setLayoutManager(new LinearLayoutManager(this)) ;
-
+        mBtnTransit.setOnClickListener(this);
+        mBtnWalk = findViewById(R.id.btnWalk);
+        mBtnWalk.setOnClickListener(this);
     }
 
     /**
@@ -164,6 +147,7 @@ public class MapsActivity extends AppCompatActivity implements
         mMap.setOnPolylineClickListener(this);
 
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
+
         restaurantCoor = new LatLng(restaurantLat,restaurantLng);
         Log.d(TAG, "lat = " + restaurantLat);
         Log.d(TAG, "lng = " + restaurantLng);
@@ -174,9 +158,11 @@ public class MapsActivity extends AppCompatActivity implements
         Log.d(TAG, "onMapReady: userLat = " + userLat);
         Log.d(TAG, "onMapReady: userLng = " + userLng);
 
+        //get distance between the 2 coordinates
         float results[] = new float[10];
         Location.distanceBetween(userLat,userLng,restaurantLat,restaurantLng,results);
 
+        //add markers
         restaurantMarker = mMap.addMarker(new MarkerOptions()
                 .position(restaurantCoor)
                 .title(restaurantName)
@@ -186,35 +172,65 @@ public class MapsActivity extends AppCompatActivity implements
                 .title("You are here!"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantCoor, 15));
         restaurantMarker.showInfoWindow();
-        userMarker.showInfoWindow();;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnGetDirections:
-                calcDirections();
+                calcDirections("driving");
                 //shows multiple markers in one screen
                 LatLngBounds bounds = new LatLngBounds.Builder().include(restaurantCoor).include(userCoor).build();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
-                mBtnGetDirections.setVisibility(View.GONE);
-                /*mBtnDriving.setVisibility(View.VISIBLE);
-                mBtnTransit.setVisibility(View.VISIBLE);
-                mBtnWalk.setVisibility(View.VISIBLE);*/
+
+                //setting up layout
+                mBtnDriving.setBackgroundColor(Color.GRAY);
+                mBtnTransit.setBackgroundColor(Color.LTGRAY);
+                mBtnWalk.setBackgroundColor(Color.LTGRAY);
                 break;
             case R.id.map_back_button:
                 Log.d(TAG, "onClick: back arrow pressed");
                 onBackArrowClicked(v);
                 break;
+            case R.id.btnDriving:
+                calcDirections("driving");
+                mBtnDriving.setBackgroundColor(Color.GRAY);
+                mBtnTransit.setBackgroundColor(Color.LTGRAY);
+                mBtnWalk.setBackgroundColor(Color.LTGRAY);
+                break;
+            case R.id.btnTransit:
+                calcDirections("transit");
+                mBtnDriving.setBackgroundColor(Color.LTGRAY);
+                mBtnTransit.setBackgroundColor(Color.GRAY);
+                mBtnWalk.setBackgroundColor(Color.LTGRAY);
+                break;
+            case R.id.btnWalk:
+                calcDirections("walk");
+                mBtnDriving.setBackgroundColor(Color.LTGRAY);
+                mBtnTransit.setBackgroundColor(Color.LTGRAY);
+                mBtnWalk.setBackgroundColor(Color.GRAY);
+                break;
         }
     }
 
-    public void calcDirections(){
+    public void calcDirections(String mode){
         DirectionsApiRequest directions = new DirectionsApiRequest(geoApiContext);
         directions.origin(new com.google.maps.model.LatLng(userLat,userLng));
         directions.destination(new com.google.maps.model.LatLng(restaurantLat,restaurantLng));
         directions.alternatives(true); //return alternative routes
-       // directions.mode("driving")
+
+        //set the different mode based on parameter
+        switch (mode) {
+            case "driving":
+                directions.mode(TravelMode.DRIVING);
+                break;
+            case "transit":
+                directions.mode(TravelMode.TRANSIT);
+                break;
+            case "walk":
+                directions.mode(TravelMode.WALKING);
+                break;
+        }
         directions.setCallback(new PendingResult.Callback<DirectionsResult>() {
             @Override
             public void onResult(DirectionsResult result) {
@@ -238,7 +254,11 @@ public class MapsActivity extends AppCompatActivity implements
             public void run() {
                 //check if any polylines in the list. if yes, clear
                 if(polylineData.size()>0){
+                    for(PolylineData polylineD: polylineData){
+                        polylineD.getPolyline().remove();
+                    }
                     polylineData.clear();
+                    Log.d(TAG, "run: cleared");
                 }
                 for(DirectionsRoute route : result.routes){
                     List<com.google.maps.model.LatLng> gDecodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
@@ -248,11 +268,14 @@ public class MapsActivity extends AppCompatActivity implements
                     for(com.google.maps.model.LatLng latLng : gDecodedPath){
                         aDecodedPath.add(new LatLng(latLng.lat,latLng.lng));
                     }
+
+                    //creating the polyline based on all the latlng
                     Polyline polyline = mMap.addPolyline(new PolylineOptions().addAll(aDecodedPath));
                     polyline.setClickable(true);
                     polyline.setColor(Color.DKGRAY);
                     polylineData.add(new PolylineData(polyline,route.legs[0]));
 
+                    //get fastest route and highlight it
                     if(route.legs[0].duration.inSeconds < shortestDuration){
                         shortestDuration = route.legs[0].duration.inSeconds;
                         onPolylineClick(polyline);
@@ -264,6 +287,8 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public void onPolylineClick(Polyline polyline) {
+
+        //iterating through all the polylines in the polylineData to find selected polyline
         for(PolylineData mPolylineData : polylineData){
             if(polyline.getId().equals(mPolylineData.getPolyline().getId())){
                 polyline.setColor(Color.BLUE);
@@ -272,14 +297,11 @@ public class MapsActivity extends AppCompatActivity implements
                 if(stepList.size()>0){
                     stepList.clear();
                 }
-                for(int i=0; i<mPolylineData.getDirectionsLeg().steps.length; i++){
-                    stepList.add(mPolylineData.getDirectionsLeg().steps[i]);
-                }
+                stepList.addAll(Arrays.asList(mPolylineData.getDirectionsLeg().steps));
 
-                Log.d(TAG, "onPolylineClick: step = " + mPolylineData.getDirectionsLeg().steps);
+                Log.d(TAG, "onPolylineClick: step = " + mPolylineData.getDirectionsLeg().steps[0]);
                 restaurantMarker.setTag(mPolylineData);
                 restaurantMarker.setSnippet("Duration = " + mPolylineData.getDirectionsLeg().duration);
-                //restaurantMarker.setSnippet("Distance = " + mPolylineData.getDirectionsLeg().distance);
                 restaurantMarker.showInfoWindow();
                 Log.d(TAG, "onPolylineClick: tag =" + restaurantMarker.getTag());
 
@@ -289,6 +311,9 @@ public class MapsActivity extends AppCompatActivity implements
                 mPolylineData.getPolyline().setZIndex(0);
             }
         }
+
+        //setting layout
+        mModeLayout.setVisibility(View.VISIBLE);
         mBtnGetDirections.setVisibility(View.GONE);
         mDirectionsRecycler.setVisibility(View.VISIBLE);
         adapter = new StepAdapter(stepList,this);

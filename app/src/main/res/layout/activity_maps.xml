@@ -17,19 +17,58 @@
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="609dp"
-            android:layout_weight="40"
+            android:layout_height="172dp"
+            android:layout_weight="50"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:context="com.google.firebase.example.fireeats.MapsActivity" />
 
+        <LinearLayout
+            android:id="@+id/modeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_weight="30"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <Button
+                android:id="@+id/btnDriving"
+                android:layout_width="134dp"
+                android:layout_height="match_parent"
+                android:text="drive"
+                android:textColor="#FFFFFF" />
+                <!--android:background="@drawable/car_png"-->
+
+
+            <Button
+                android:id="@+id/btnTransit"
+                android:layout_width="143dp"
+                android:layout_height="match_parent"
+                android:text="transit"
+                android:textColor="#FFFFFF"/>
+                <!--android:background="@drawable/bus_png"-->
+
+
+            <Button
+                android:id="@+id/btnWalk"
+                android:layout_width="133dp"
+                android:layout_height="match_parent"
+                android:text="walk"
+                android:textColor="#FFFFFF"/>
+                <!--android:background="@drawable/walk_png"-->
+
+
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/directionsRecycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="30"
+            android:layout_height="260dp"
+            android:layout_weight="50"
             android:visibility="gone"/>
 
         <Button
@@ -43,21 +82,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
-
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="449dp"
-        android:layout_marginTop="209dp"
-        app:layout_constraintBottom_toBottomOf="@+id/layout1"
-        app:layout_constraintTop_toTopOf="@+id/layout1">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/directionsRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-    </LinearLayout>-->
-
 
     <ImageView
         android:id="@+id/map_back_button"
