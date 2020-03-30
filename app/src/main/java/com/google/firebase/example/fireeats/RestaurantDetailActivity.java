@@ -361,6 +361,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
 
         restaurantLat = restaurant.getX();
         restaurantLng = restaurant.getY();
+        restaurantName = restaurant.getName();
 
         // Background image
         Glide.with(mImageView.getContext())
