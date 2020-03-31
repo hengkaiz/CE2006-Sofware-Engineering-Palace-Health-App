@@ -40,7 +40,7 @@ public class Restaurant {
     private double avgRating;
     private double x;
     private double y;
-    private int x_y;
+    private long x_y;
     private int postal;
     private List<String> liked = new ArrayList<String>();
     private String description;
@@ -52,7 +52,7 @@ public class Restaurant {
 
     public Restaurant() {}
 
-    public Restaurant(String name, String city, String category, String photo, int price, int numRatings, double avgRating, double x, double y, int x_y, int postal, List<String> liked, String description, String openingHours, int sugar, int salt, int fat) {
+    public Restaurant(String name, String city, String category, String photo, int price, int numRatings, double avgRating, double x, double y, long x_y, int postal, List<String> liked, String description, String openingHours, int sugar, int salt, int fat) {
         this.name = name;
         this.city = city;
         this.category = category;
@@ -136,13 +136,6 @@ public class Restaurant {
         this.avgRating = avgRating;
     }
 
-    public int getX_y() {
-        return x_y;
-    }
-
-    public void setX_y(int x_y) {
-        this.x_y = x_y;
-    }
 
     public void setX(double x) {
         this.x = x;
@@ -206,5 +199,13 @@ public class Restaurant {
 
     public void setFat(int fat) {
         this.fat = fat;
+    }
+
+    public long getX_y() {
+        return x_y;
+    }
+
+    public void setX_y(long x_y) {
+        this.x_y = x_y;
     }
 }
