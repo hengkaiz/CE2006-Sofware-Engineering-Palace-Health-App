@@ -33,16 +33,18 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@id/nav_bot">
+        android:layout_above="@id/nav_bot"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -306,8 +308,8 @@
             </RelativeLayout>
 
             <TextView
-                style="@style/AppTheme.Subheader"
                 android:id="@+id/profile_page_risk_level_title"
+                style="@style/AppTheme.Subheader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -333,8 +335,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    tools:text="RISK_LEVEL_PLACEHOLDER"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    tools:text="RISK_LEVEL_PLACEHOLDER" />
             </RelativeLayout>
 
             <TextView
@@ -347,6 +349,165 @@
                 android:text="HEALTH TIPS"
                 android:textColor="#4CAF50"
                 android:textStyle="bold" />
+
+            <!--health tip 1-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_1_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="1. Stay Physically Active"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_1_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip1"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
+
+            <!--health tip 2-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_2_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="2. Eat Healthy"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_2_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip2"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
+
+            <!--health tip 3-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_3_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="3. Be Smoke-free"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_3_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip3"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
+
+            <!--health tip 4-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_4_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="4. Keep Your Mind Active"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_4_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip4"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
+
+            <!--health tip 5-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_5_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="5. Go for Health Screening"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_5_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip5"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
 
         </LinearLayout>
 

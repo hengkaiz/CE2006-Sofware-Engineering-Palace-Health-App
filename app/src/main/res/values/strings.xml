@@ -82,4 +82,10 @@
         <item>@string/sort_by_price</item>
     </string-array>
     <string name="title_activity_maps">Map</string>
+    <string name="update_details">Update Details</string>
+    <string name="health_tip1">Staying physically active lowers your risk of chronic conditions such as coronary heart disease, high blood pressure, high blood cholesterol, diabetes and selected cancers. It also helps to decrease your risk of falling and bone fractures as well as reduces anxiety, depression, and improves your overall wellbeing.</string>
+    <string name="health_tip2">A balanced diet is one that is rich in fruits, vegetables and whole grains. It is also low in fat, cholesterol, salt and sugar. Medication alone is usually not enough to manage your chronic conditions well. Healthy eating, together with medication plays an important role in managing chronic conditions. For instance, reduce your salt intake for better control of high blood pressure.</string>
+    <string name="health_tip3">If you smoke, consider quitting as it will reduce your risk of heart diseases, high blood pressure, cancers and many other chronic conditions. Quitting will also help you save money, which you can spend on your loved ones. For more advice on how to quit smoking, please call QuitLine at 1800 438 2000.</string>
+    <string name="health_tip4">A healthy mind keeps you young at heart and reduces your risk of various diseases. Stay positive as you adapt and learn to cope with changes in your life.</string>
+    <string name="health_tip5">Regular health screening is important to detect conditions. Many chronic conditions, such as high blood pressure, diabetes, high blood cholesterol and certain cancers (e.g. breast, cervical or colorectal cancer) can develop without any signs and symptoms. Regular health screening is important to detect these diseases early. Early detection, together with early treatment and good management of these diseases can prevent or delay the onset of complications.</string>
 </resources>

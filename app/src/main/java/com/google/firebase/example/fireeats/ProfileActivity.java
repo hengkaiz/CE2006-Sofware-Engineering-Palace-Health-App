@@ -2,6 +2,7 @@ package com.google.firebase.example.fireeats;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,12 +10,14 @@ import android.net.sip.SipSession;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.example.fireeats.model.Restaurant;
@@ -52,6 +55,8 @@ public class ProfileActivity extends AppCompatActivity implements
 
     private ListenerRegistration mUserRegistration;
 
+    private Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +78,8 @@ public class ProfileActivity extends AppCompatActivity implements
         mProfileRLTitle = findViewById(R.id.profile_page_risk_level_title);
 
         mProfileRLLinear = findViewById(R.id.profile_page_risk_level_layout);
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -155,4 +162,24 @@ public class ProfileActivity extends AppCompatActivity implements
                     return true;
                 }
             };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.update_details:
+                startActivity(new Intent(this, EnterUserInfoActivity.class));
+                break;
+            case R.id.menu_sign_out:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
