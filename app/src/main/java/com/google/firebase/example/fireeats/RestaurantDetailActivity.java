@@ -372,16 +372,16 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         Boolean firstString = true;
 
         if(restaurant.getSugar() == 1){
-            lowIn = lowIn.concat("Sugar");
+            lowIn = "Sugar";
             firstString = false;
         }
         if(restaurant.getSalt() == 1){
-            lowIn = (firstString) ? null : lowIn.concat(", ");
+            lowIn = (firstString) ? "" : lowIn.concat(", ");
             lowIn = lowIn.concat("Salt");
             firstString = false;
         }
         if(restaurant.getFat() == 1){
-            lowIn = (firstString) ? null : lowIn.concat(", ");
+            lowIn = (firstString) ? "" : lowIn.concat(", ");
             lowIn = lowIn.concat("Fat");
         }
 
