@@ -147,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
                         android:textColor="@android:color/white"
-                        tools:text="cm" />
+                        android:text="cm" />
                 </LinearLayout>
 
                 <TextView
@@ -185,7 +185,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
                         android:textColor="@android:color/white"
-                        tools:text="kg" />
+                        android:text="kg" />
                 </LinearLayout>
 
             </RelativeLayout>
@@ -264,7 +264,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
                         android:textColor="@android:color/white"
-                        tools:text="mmol/L" />
+                        android:text="mmol/L" />
                 </LinearLayout>
 
                 <TextView
@@ -302,7 +302,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
                         android:textColor="@android:color/white"
-                        tools:text="mmHg" />
+                        android:text="mmHg" />
                 </LinearLayout>
 
             </RelativeLayout>
