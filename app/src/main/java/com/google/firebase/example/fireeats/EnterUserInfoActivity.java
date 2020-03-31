@@ -43,7 +43,7 @@ public class EnterUserInfoActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_enter_user_info);
+        setContentView(R.layout.activity_user_enter_info);
 
         // Views
         mAge = findViewById(R.id.user_age);
@@ -55,14 +55,11 @@ public class EnterUserInfoActivity extends AppCompatActivity
         // Buttons
         findViewById(R.id.user_sex_male_button).setOnClickListener(this);
         findViewById(R.id.user_sex_female_button).setOnClickListener(this);
-        findViewById(R.id.enter_info_button_next).setOnClickListener(this);
 
         findViewById(R.id.user_treated_for_hbp_yes).setOnClickListener(this);
         findViewById(R.id.user_treated_for_hbp_no).setOnClickListener(this);
         findViewById(R.id.user_diabetic_yes).setOnClickListener(this);
         findViewById(R.id.user_diabetic_no).setOnClickListener(this);
-        findViewById(R.id.enter_info_button_back2).setOnClickListener(this);
-        findViewById(R.id.enter_info_button_next2).setOnClickListener(this);
 
         findViewById(R.id.user_smoke_yes).setOnClickListener(this);
         findViewById(R.id.user_smoke_no).setOnClickListener(this);
@@ -70,7 +67,6 @@ public class EnterUserInfoActivity extends AppCompatActivity
         findViewById(R.id.user_activity_level_low).setOnClickListener(this);
         findViewById(R.id.user_activity_level_medium).setOnClickListener(this);
         findViewById(R.id.user_activity_level_high).setOnClickListener(this);
-        findViewById(R.id.enter_info_button_back3).setOnClickListener(this);
         findViewById(R.id.enter_info_button_submit).setOnClickListener(this);
 
         // Enable Firestore logging
@@ -80,7 +76,6 @@ public class EnterUserInfoActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFirestore = FirebaseFirestore.getInstance();
     }
@@ -92,9 +87,6 @@ public class EnterUserInfoActivity extends AppCompatActivity
                 break;
             case R.id.user_sex_female_button:
                 mSex = "Female";
-                break;
-            case R.id.enter_info_button_next:
-                goToSecondPage();
                 break;
 
             // Second page buttons
@@ -109,12 +101,6 @@ public class EnterUserInfoActivity extends AppCompatActivity
                 break;
             case R.id.user_diabetic_no:
                 mDiabetic = "No";
-                break;
-            case R.id.enter_info_button_back2:
-                goToFirstPage();
-                break;
-            case R.id.enter_info_button_next2:
-                goToThirdPage();
                 break;
 
             // Third page buttons
@@ -136,57 +122,18 @@ public class EnterUserInfoActivity extends AppCompatActivity
             case R.id.user_activity_level_high:
                 mActivityLevel = 3;
                 break;
-            case R.id.enter_info_button_back3:
-                goToSecondPage();
-                break;
             case R.id.enter_info_button_submit:
                 enterUserInfoToDb();
                 break;
 
             default:
-                goToFirstPage();
                 break;
-        }
-    }
-
-    // Go to second page of activity
-    private void goToThirdPage(){
-        updateUI(3);
-    }
-
-    // Go to second page of activity
-    private void goToSecondPage(){
-        if(!validateForm()){ return; }
-        updateUI(2);
-    }
-
-    // Go back to first page of activity
-    private void goToFirstPage(){
-        updateUI(1);
-    }
-
-    // Update UI of layout
-    private void updateUI(int page) {
-        if (page == 1) {
-            findViewById(R.id.main_layout3).setVisibility(View.GONE);
-            findViewById(R.id.main_layout2).setVisibility(View.GONE);
-            findViewById(R.id.main_layout1).setVisibility(View.VISIBLE);
-
-        }
-        else if (page == 2){
-            findViewById(R.id.main_layout3).setVisibility(View.GONE);
-            findViewById(R.id.main_layout2).setVisibility(View.VISIBLE);
-            findViewById(R.id.main_layout1).setVisibility(View.GONE);
-        }
-        else if (page == 3){
-            findViewById(R.id.main_layout3).setVisibility(View.VISIBLE);
-            findViewById(R.id.main_layout2).setVisibility(View.GONE);
-            findViewById(R.id.main_layout1).setVisibility(View.GONE);
         }
     }
 
     // Store user information in Firestore
     private void enterUserInfoToDb(){
+        if(!validateForm()){ return; }
         Map<String, Object> user = new HashMap<>();
         user.put("name", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         user.put("age", Integer.parseInt(mAge.getText().toString()));
