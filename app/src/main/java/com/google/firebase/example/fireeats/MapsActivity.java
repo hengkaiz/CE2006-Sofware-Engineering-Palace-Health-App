@@ -68,8 +68,8 @@ public class MapsActivity extends AppCompatActivity implements
     private double restaurantLat;
     private double restaurantLng;
     private String restaurantName;
-    private double userLat = 1.405256; //1.348326;//1.353286;
-    private double userLng = 103.902334; //103.683129;//103.682812;
+    private double userLat = 1.348326; //1.348326;//1.353286;
+    private double userLng = 103.683129; //103.683129;//103.682812;
     private LatLng restaurantCoor;
     private LatLng userCoor;
     private Marker restaurantMarker;

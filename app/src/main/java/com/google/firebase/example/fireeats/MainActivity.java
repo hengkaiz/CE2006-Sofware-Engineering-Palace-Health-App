@@ -210,66 +210,12 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         // City (equality filter)
-        if (filters.hasCity()) {
-            /*query = query.whereGreaterThanOrEqualTo("x",filters.getXdown())
-                    .whereLessThanOrEqualTo("x",filters.getXup())
-                    .whereGreaterThanOrEqualTo("y",filters.getYdown())
-                    .whereLessThanOrEqualTo("y",filters.getYup());*/
-
-           /* List<String> idList1 = new ArrayList<>();
-            List<String> idList2 = new ArrayList<>();
-            Task q1 = query.whereGreaterThanOrEqualTo("x",filters.getXdown())
-                    .whereLessThanOrEqualTo("x",filters.getXup())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()){
-                                for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                                    idList1.add(documentSnapshot.getId());
-                                }
-                            }
-                            else{
-                                Log.d(TAG, "onComplete: fail1");
-                            }
-                        }
-                    });
-
-            Task q2 = query.whereGreaterThanOrEqualTo("y",filters.getYdown())
-                    .whereLessThanOrEqualTo("y",filters.getYup())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()){
-                                for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                                    idList1.add(documentSnapshot.getId());
-                                    Log.d(TAG, "onComplete: yay");
-                                }
-                            }
-                            else{
-                                Log.d(TAG, "onComplete: fail2");
-                            }
-                        }
-                    });
-
-            for(String id : idList1){
-                if(idList2.contains(id)){
-                    continue;
-                }
-                else{
-                    idList2.add(id);
-                    idList1.remove(id);
-                }
-            }
-            query = query.whereIn("id", idList1);*/
-
-           query = query.whereLessThanOrEqualTo("x_y", filters.getXup())
-                   .whereLessThanOrEqualTo("x_y", filters.getYup())
-                   .whereGreaterThanOrEqualTo("x_y", filters.getXdown())
-                   .whereGreaterThanOrEqualTo("x_y", filters.getYdown());
-           filters.setSortBy("x_y");
-        }
+        /*
+       query = query.whereLessThanOrEqualTo("x_y", filters.getXup())
+               .whereLessThanOrEqualTo("x_y", filters.getYup())
+               .whereGreaterThanOrEqualTo("x_y", filters.getXdown())
+               .whereGreaterThanOrEqualTo("x_y", filters.getYdown());
+           */
 
         // Price (equality filter)
         if (filters.hasPrice()) {

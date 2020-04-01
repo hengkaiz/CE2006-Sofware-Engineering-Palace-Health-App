@@ -22,6 +22,8 @@ import com.google.firebase.example.fireeats.model.Restaurant;
 import com.google.firebase.example.fireeats.util.RestaurantUtil;
 import com.google.firebase.firestore.Query;
 
+import static java.lang.StrictMath.abs;
+
 /**
  * Object for passing filters around.
  */
@@ -33,10 +35,13 @@ public class Filters {
     private String sortBy = null;
     private Query.Direction sortDirection = null;
 
-    private double xup;
-    private double xdown;
-    private double yup;
-    private double ydown;
+    private long userCoordinatesX = 1405256000000000L;
+    private long userCoordinatesY = 103902334;
+
+    private long xup = 1550278000000000L + userCoordinatesY ; //1398333000000000L;
+    private long xdown = 1260278000000000L + userCoordinatesY; //130833300000000L;
+    private long yup = userCoordinatesX + 104047200; //103727800;
+    private long ydown = userCoordinatesX + 103557200; //103637800;
 
     public Filters() {}
 
@@ -80,10 +85,10 @@ public class Filters {
         this.city = city;
         switch(city){
             case "Nearby":
-                this.xup = 1360278000000000L; //1398333000000000L;
-                this.xdown = 1350278000000000L; //130833300000000L;
-                this.yup = 103947200; //103727800;
-                this.ydown = 103857200; //103637800;
+                this.xup = 1450278000000000L + userCoordinatesY ; //1398333000000000L;
+                this.xdown = 1360278000000000L + userCoordinatesY; //130833300000000L;
+                this.yup = userCoordinatesX + 103947200; //103727800;
+                this.ydown = userCoordinatesX + 103857200; //103637800;
                 break;
 
         }
@@ -162,7 +167,7 @@ public class Filters {
         return xup;
     }
 
-    public void setXup(double xup) {
+    public void setXup(long xup) {
         this.xup = xup;
     }
 
@@ -170,7 +175,7 @@ public class Filters {
         return xdown;
     }
 
-    public void setXdown(double xdown) {
+    public void setXdown(long xdown) {
         this.xdown = xdown;
     }
 
@@ -178,7 +183,7 @@ public class Filters {
         return yup;
     }
 
-    public void setYup(double yup) {
+    public void setYup(long yup) {
         this.yup = yup;
     }
 
@@ -186,7 +191,7 @@ public class Filters {
         return ydown;
     }
 
-    public void setYdown(double ydown) {
+    public void setYdown(long ydown) {
         this.ydown = ydown;
     }
 }
