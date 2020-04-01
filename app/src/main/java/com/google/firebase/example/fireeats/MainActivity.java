@@ -2,26 +2,25 @@ package com.google.firebase.example.fireeats;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +30,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
@@ -207,7 +211,64 @@ public class MainActivity extends AppCompatActivity implements
 
         // City (equality filter)
         if (filters.hasCity()) {
-            query = query.whereEqualTo("city", filters.getCity());
+            /*query = query.whereGreaterThanOrEqualTo("x",filters.getXdown())
+                    .whereLessThanOrEqualTo("x",filters.getXup())
+                    .whereGreaterThanOrEqualTo("y",filters.getYdown())
+                    .whereLessThanOrEqualTo("y",filters.getYup());*/
+
+           /* List<String> idList1 = new ArrayList<>();
+            List<String> idList2 = new ArrayList<>();
+            Task q1 = query.whereGreaterThanOrEqualTo("x",filters.getXdown())
+                    .whereLessThanOrEqualTo("x",filters.getXup())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                    idList1.add(documentSnapshot.getId());
+                                }
+                            }
+                            else{
+                                Log.d(TAG, "onComplete: fail1");
+                            }
+                        }
+                    });
+
+            Task q2 = query.whereGreaterThanOrEqualTo("y",filters.getYdown())
+                    .whereLessThanOrEqualTo("y",filters.getYup())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                    idList1.add(documentSnapshot.getId());
+                                    Log.d(TAG, "onComplete: yay");
+                                }
+                            }
+                            else{
+                                Log.d(TAG, "onComplete: fail2");
+                            }
+                        }
+                    });
+
+            for(String id : idList1){
+                if(idList2.contains(id)){
+                    continue;
+                }
+                else{
+                    idList2.add(id);
+                    idList1.remove(id);
+                }
+            }
+            query = query.whereIn("id", idList1);*/
+
+           query = query.whereLessThanOrEqualTo("x_y", filters.getXup())
+                   .whereLessThanOrEqualTo("x_y", filters.getYup())
+                   .whereGreaterThanOrEqualTo("x_y", filters.getXdown())
+                   .whereGreaterThanOrEqualTo("x_y", filters.getYdown());
+           filters.setSortBy("x_y");
         }
 
         // Price (equality filter)

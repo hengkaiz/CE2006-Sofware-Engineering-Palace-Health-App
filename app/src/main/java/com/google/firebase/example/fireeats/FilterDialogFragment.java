@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.example.fireeats.model.Restaurant;
 import com.google.firebase.firestore.Query;
 
@@ -124,7 +125,7 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
     private String getSelectedCity() {
         String selected = (String) mCitySpinner.getSelectedItem();
         if (getString(R.string.value_any_city).equals(selected)) {
-            return null;
+            return "Nearby";
         } else {
             return selected;
         }

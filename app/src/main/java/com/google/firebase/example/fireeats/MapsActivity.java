@@ -2,9 +2,12 @@ package com.google.firebase.example.fireeats;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -23,6 +26,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -63,8 +68,8 @@ public class MapsActivity extends AppCompatActivity implements
     private double restaurantLat;
     private double restaurantLng;
     private String restaurantName;
-    private double userLat = 1.353286;
-    private double userLng = 103.682812;
+    private double userLat = 1.405256; //1.348326;//1.353286;
+    private double userLng = 103.902334; //103.683129;//103.682812;
     private LatLng restaurantCoor;
     private LatLng userCoor;
     private Marker restaurantMarker;
@@ -143,6 +148,15 @@ public class MapsActivity extends AppCompatActivity implements
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION}, 10);
+        }*/
         mMap = googleMap;
         mMap.setOnPolylineClickListener(this);
 
@@ -181,7 +195,7 @@ public class MapsActivity extends AppCompatActivity implements
                 calcDirections("driving");
                 //shows multiple markers in one screen
                 LatLngBounds bounds = new LatLngBounds.Builder().include(restaurantCoor).include(userCoor).build();
-                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 500));
 
                 //setting up layout
                 mBtnDriving.setBackgroundColor(Color.GRAY);
@@ -322,5 +336,17 @@ public class MapsActivity extends AppCompatActivity implements
 
     public void onBackArrowClicked(View view) {
         onBackPressed();
+    }
+
+    public boolean inNearby(LatLng coor){
+        Circle circle = mMap.addCircle(new CircleOptions().center(userCoor).radius(5000));
+        float results[] = new float[10];
+        Location.distanceBetween(userLat,userLng,coor.latitude,coor.longitude,results);
+        if(results[0]<=5000){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

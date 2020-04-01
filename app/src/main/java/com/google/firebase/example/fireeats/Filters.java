@@ -33,6 +33,11 @@ public class Filters {
     private String sortBy = null;
     private Query.Direction sortDirection = null;
 
+    private double xup;
+    private double xdown;
+    private double yup;
+    private double ydown;
+
     public Filters() {}
 
     public static Filters getDefault() {
@@ -73,6 +78,15 @@ public class Filters {
 
     public void setCity(String city) {
         this.city = city;
+        switch(city){
+            case "Nearby":
+                this.xup = 1360278000000000L; //1398333000000000L;
+                this.xdown = 1350278000000000L; //130833300000000L;
+                this.yup = 103947200; //103727800;
+                this.ydown = 103857200; //103637800;
+                break;
+
+        }
     }
 
     public int getPrice() {
@@ -142,5 +156,37 @@ public class Filters {
         } else {
             return context.getString(R.string.sorted_by_rating);
         }
+    }
+
+    public double getXup() {
+        return xup;
+    }
+
+    public void setXup(double xup) {
+        this.xup = xup;
+    }
+
+    public double getXdown() {
+        return xdown;
+    }
+
+    public void setXdown(double xdown) {
+        this.xdown = xdown;
+    }
+
+    public double getYup() {
+        return yup;
+    }
+
+    public void setYup(double yup) {
+        this.yup = yup;
+    }
+
+    public double getYdown() {
+        return ydown;
+    }
+
+    public void setYdown(double ydown) {
+        this.ydown = ydown;
     }
 }
