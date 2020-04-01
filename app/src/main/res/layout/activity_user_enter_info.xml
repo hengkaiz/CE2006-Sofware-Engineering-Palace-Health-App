@@ -1,0 +1,493 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0"
+    tools:context="com.google.firebase.example.fireeats.EnterUserInfoActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppTheme"
+        app:logo="@drawable/ic_person_white_24dp"
+        app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
+        app:title="User Information"
+        app:titleMarginStart="24dp"
+        app:titleTextColor="@android:color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="8dp"
+            android:paddingBottom="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/AppTheme.Subheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="5dp"
+                android:text="BASIC INFORMATION"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/greyDisabled"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/user_info_sex"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold"
+                    android:text="Sex" />
+
+                <RadioGroup
+                    style="@style/AppTheme.Body1"
+                    android:id="@+id/user_sex"
+                    android:layout_below="@+id/user_info_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/user_sex_male_button"
+                        android:layout_width="103dp"
+                        android:layout_height="match_parent"
+                        android:checked="true"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="Male" />
+
+                    <RadioButton
+                        android:id="@+id/user_sex_female_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="Female" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/greyDisabled"
+                android:layout_marginTop="10dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/user_info_age"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold"
+                    android:text="Age" />
+
+                <EditText
+                    android:id="@+id/user_age"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_below="@+id/user_info_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/user_info_height"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_age"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold"
+                    android:text="Height" />
+
+                <EditText
+                    android:id="@+id/user_height"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_below="@+id/user_info_height"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="(cm)"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/user_info_weight"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_height"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold"
+                    android:text="Weight" />
+
+                <EditText
+                    android:id="@+id/user_weight"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_below="@+id/user_info_weight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="(kg)"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
+
+            <TextView
+                style="@style/AppTheme.Subheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentStart="true"
+                android:text="ADDITIONAL INFORMATION"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/greyDisabled"
+                android:layout_marginTop="10dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/user_info_cholesterol"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold"
+                    android:text="Cholesterol Level" />
+
+                <EditText
+                    android:id="@+id/user_cholesterol"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_below="@+id/user_info_cholesterol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="(mmol/L)"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/user_info_bp"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_cholesterol"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold"
+                    android:text="Blood Pressure" />
+
+                <EditText
+                    android:id="@+id/user_bloodpressure"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_below="@+id/user_info_bp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="(mmHg)"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/text_treated_for_hbp"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_bloodpressure"
+                    android:gravity="center"
+                    android:textColor="@color/greySecondary"
+                    android:layout_marginTop="5dp"
+                    android:textStyle="bold"
+                    android:text="Treated for High Blood Pressure?" />
+
+                <RadioGroup
+                    style="@style/AppTheme.Body1"
+                    android:id="@+id/user_treated_for_hbp"
+                    android:layout_below="@+id/text_treated_for_hbp"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/user_treated_for_hbp_yes"
+                        android:layout_width="103dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="Yes" />
+
+                    <RadioButton
+                        android:id="@+id/user_treated_for_hbp_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:checked="true"
+                        android:text="No" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/text_diabetic"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_treated_for_hbp"
+                    android:gravity="center"
+                    android:textColor="@color/greySecondary"
+                    android:layout_marginTop="5dp"
+                    android:textStyle="bold"
+                    android:text="Diabetic?" />
+
+                <RadioGroup
+                    style="@style/AppTheme.Body1"
+                    android:id="@+id/user_diabetic"
+                    android:layout_below="@+id/text_diabetic"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/user_diabetic_yes"
+                        android:layout_width="103dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="Yes" />
+
+                    <RadioButton
+                        android:id="@+id/user_diabetic_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:checked="true"
+                        android:text="No" />
+                </RadioGroup>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/greyDisabled"
+                android:layout_marginTop="10dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/text_user_smoke"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold"
+                    android:text="Smoker?" />
+
+                <RadioGroup
+                    style="@style/AppTheme.Body1"
+                    android:id="@+id/user_smoke"
+                    android:layout_below="@+id/text_user_smoke"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/user_smoke_yes"
+                        android:layout_width="103dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="Yes" />
+
+                    <RadioButton
+                        android:id="@+id/user_smoke_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:checked="true"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="No" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/text_activity_level"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_smoke"
+                    android:gravity="center"
+                    android:textColor="@color/greySecondary"
+                    android:layout_marginTop="5dp"
+                    android:textStyle="bold"
+                    android:text="Weekly Exercise Level" />
+
+                <RadioGroup
+                    style="@style/AppTheme.Body1"
+                    android:id="@+id/user_activity_level"
+                    android:layout_below="@+id/text_activity_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/user_activity_level_none"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:checked="true"
+                        android:text="None" />
+
+                    <RadioButton
+                        android:id="@+id/user_activity_level_low"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="Low" />
+
+                    <RadioButton
+                        android:id="@+id/user_activity_level_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="Moderate" />
+
+                    <RadioButton
+                        android:id="@+id/user_activity_level_high"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="High" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/text_user_history_heart_disease"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_activity_level"
+                    android:gravity="center"
+                    android:textColor="@color/greySecondary"
+                    android:layout_marginTop="5dp"
+                    android:textStyle="bold"
+                    android:text="History of Heart Disease/ Attack?" />
+
+                <RadioGroup
+                    style="@style/AppTheme.Body1"
+                    android:id="@+id/user_history_heart_disease"
+                    android:layout_below="@+id/text_user_history_heart_disease"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/text_user_history_heart_disease_yes"
+                        android:layout_width="103dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="Yes" />
+
+                    <RadioButton
+                        android:id="@+id/text_user_history_heart_disease_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:textColor="@color/greySecondary"
+                        android:buttonTint="@color/colorPrimary"
+                        android:checked="true"
+                        android:text="No" />
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/enter_info_button_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,8 +1,104 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
+    android:background="#E0E0E0"
     android:layout_height="match_parent"
-    tools:context="com.google.firebase.example.fireeats.MapsActivity" />
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="172dp"
+            android:layout_weight="50"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context="com.google.firebase.example.fireeats.MapsActivity" />
+
+        <LinearLayout
+            android:id="@+id/modeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_weight="30"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <Button
+                android:id="@+id/btnDriving"
+                android:layout_width="134dp"
+                android:layout_height="match_parent"
+                android:text="drive"
+                android:textColor="#FFFFFF" />
+                <!--android:background="@drawable/car_png"-->
+
+
+            <Button
+                android:id="@+id/btnTransit"
+                android:layout_width="143dp"
+                android:layout_height="match_parent"
+                android:text="transit"
+                android:textColor="#FFFFFF"/>
+                <!--android:background="@drawable/bus_png"-->
+
+
+            <Button
+                android:id="@+id/btnWalk"
+                android:layout_width="133dp"
+                android:layout_height="match_parent"
+                android:text="walk"
+                android:textColor="#FFFFFF"/>
+                <!--android:background="@drawable/walk_png"-->
+
+
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/directionsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_weight="50"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btnGetDirections"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="Get Directions"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/map_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:visibility="visible"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_clear_black_24dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+

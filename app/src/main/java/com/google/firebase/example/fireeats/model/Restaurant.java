@@ -17,12 +17,14 @@
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Restaurant POJO.
  */
 @IgnoreExtraProperties
 public class Restaurant {
-
     public static final String FIELD_CITY = "city";
     public static final String FIELD_CATEGORY = "category";
     public static final String FIELD_PRICE = "price";
@@ -38,11 +40,19 @@ public class Restaurant {
     private double avgRating;
     private double x;
     private double y;
+    private long x_y;
+    private int postal;
+    private List<String> liked = new ArrayList<String>();
+    private String description;
+
+    private String openingHours;
+    private int sugar;
+    private int salt;
+    private int fat;
 
     public Restaurant() {}
 
-    public Restaurant(String name, String city, String category, String photo,
-                      int price, int numRatings, double avgRating, double x, double y) {
+    public Restaurant(String name, String city, String category, String photo, int price, int numRatings, double avgRating, double x, double y, long x_y, int postal, List<String> liked, String description, String openingHours, int sugar, int salt, int fat) {
         this.name = name;
         this.city = city;
         this.category = category;
@@ -52,6 +62,14 @@ public class Restaurant {
         this.avgRating = avgRating;
         this.x = x;
         this.y = y;
+        this.x_y = x_y;
+        this.postal = postal;
+        this.liked = liked;
+        this.description = description;
+        this.openingHours = openingHours;
+        this.sugar = sugar;
+        this.salt = salt;
+        this.fat = fat;
     }
 
     public double getX() {
@@ -116,5 +134,78 @@ public class Restaurant {
 
     public void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
+    }
+
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public int getPostal() {
+        return postal;
+    }
+
+    public void setPostal(int postal) {
+        this.postal = postal;
+    }
+
+    public List<String> getLiked() {
+        return liked;
+    }
+
+    public void setLiked(List<String> liked) {
+        this.liked = liked;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(String openingHours) {
+        this.openingHours = openingHours;
+    }
+
+    public int getSugar() {
+        return sugar;
+    }
+
+    public void setSugar(int sugar) {
+        this.sugar = sugar;
+    }
+
+    public int getSalt() {
+        return salt;
+    }
+
+    public void setSalt(int salt) {
+        this.salt = salt;
+    }
+
+    public int getFat() {
+        return fat;
+    }
+
+    public void setFat(int fat) {
+        this.fat = fat;
+    }
+
+    public long getX_y() {
+        return x_y;
+    }
+
+    public void setX_y(long x_y) {
+        this.x_y = x_y;
     }
 }

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_step"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="16dp"
+    android:paddingLeft="16dp"
+    android:background="#E0E0E0"
+    android:paddingRight="16dp">
+
+    <TextView
+        android:id="@+id/step_description"
+        style="@style/AppTheme.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:ellipsize="end"
+        android:maxWidth="120dp"
+        android:maxLines="2"
+        android:textStyle="bold"
+        android:textColor="@color/greyPrimary"/>
+
+    <TextView
+        style="@style/AppTheme.Body1"
+        android:id="@+id/step_duration"
+        android:layout_width="182dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/step_description"
+        android:layout_alignStart="@+id/step_description"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxWidth="120dp"
+        android:maxLines="1"
+        android:textColor="@color/greyPrimary" />
+
+    <TextView
+        style="@style/AppTheme.Body1"
+        android:id="@+id/step_distance"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/step_duration"
+        android:layout_alignStart="@+id/step_duration"
+        android:layout_alignEnd="@+id/step_duration"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxWidth="120dp"
+        android:maxLines="1"
+        android:textColor="@color/greyPrimary" />
+
+    <View
+        style="@style/AppTheme.Divider"
+        android:layout_below="@id/step_distance"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
+
+</RelativeLayout>

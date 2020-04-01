@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,23 +36,34 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.example.fireeats.adapter.RatingAdapter;
 import com.google.firebase.example.fireeats.model.Rating;
 import com.google.firebase.example.fireeats.model.Restaurant;
 import com.google.firebase.example.fireeats.util.RestaurantUtil;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
@@ -74,6 +86,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
     private ViewGroup mEmptyView;
     private RecyclerView mRatingsRecycler;
 
+    private TextView mRestaurantDetails;
+    private TextView mRestaurantOpeningHours;
+    private TextView mRestaurantGoodForDetails;
+
     private RatingDialogFragment mRatingDialog;
 
     private FirebaseFirestore mFirestore;
@@ -86,6 +102,8 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
     private double restaurantLat;
     private double restaurantLng;
     private String restaurantName;
+
+    private String uID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,16 +120,41 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mEmptyView = findViewById(R.id.view_empty_ratings);
         mRatingsRecycler = findViewById(R.id.recycler_ratings);
 
+        mRestaurantDetails = findViewById(R.id.restaurant_details);
+        mRestaurantOpeningHours = findViewById(R.id.restaurant_opening_hours);
+        mRestaurantGoodForDetails = findViewById(R.id.restaurant_good_for_details);
+
 
         findViewById(R.id.restaurant_button_back).setOnClickListener(this);
         findViewById(R.id.fab_show_rating_dialog).setOnClickListener(this);
         findViewById(R.id.show_directions).setOnClickListener(this);
+        findViewById(R.id.favorite_restaurant).setOnClickListener(this);
+        findViewById(R.id.unfavorite_restaurant).setOnClickListener(this);
 
         // Get restaurant ID from extras
         restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
         if (restaurantId == null) {
             throw new IllegalArgumentException("Must pass extra " + KEY_RESTAURANT_ID);
         }
+
+        uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        CollectionReference resRef = FirebaseFirestore.getInstance().collection("restaurants");
+
+        resRef.whereEqualTo("postal", Integer.parseInt(restaurantId)).whereArrayContains("liked", uID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                updateUI(0);
+                            }
+                        } else {
+                            updateUI(1);
+                        }
+                    }
+                });
 
         // Initialize Firestore
         mFirestore = FirebaseFirestore.getInstance();
@@ -148,10 +191,31 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
     @Override
     public void onStart() {
         super.onStart();
+        try {
+            //set time in mili
+            Thread.sleep(800);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         mRatingAdapter.startListening();
         mRestaurantRegistration = mRestaurantRef.addSnapshotListener(this);
+    }
 
+    // Show unfavorite/ favorite button depending on whether user already favorited it
+    private void updateUI(int fav){
+        switch(fav){
+            case 0:
+                findViewById(R.id.favorite_restaurant).setVisibility(View.GONE);
+                findViewById(R.id.unfavorite_restaurant).setVisibility(View.VISIBLE);
+                break;
+
+            case 1:
+                findViewById(R.id.favorite_restaurant).setVisibility(View.VISIBLE);
+                findViewById(R.id.unfavorite_restaurant).setVisibility(View.GONE);
+                break;
+        }
     }
 
     @Override
@@ -177,15 +241,73 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
                 break;
             case R.id.show_directions:
                 Intent intent = new Intent(RestaurantDetailActivity.this, MapsActivity.class);
-                intent.putExtra(MapsActivity.KEY_RESTAURANT_ID, restaurantId);
                 intent.putExtra(MapsActivity.RESTAURANT_LAT, restaurantLat);
                 intent.putExtra(MapsActivity.RESTAURANT_LNG, restaurantLng);
                 intent.putExtra(MapsActivity.RESTAURANT_NAME, restaurantName);
                 startActivity(intent);
                 break;
+            case R.id.favorite_restaurant:
+                addToFavorites();
+                break;
+            case R.id.unfavorite_restaurant:
+                removeFromFavorites();
+                break;
         }
     }
 
+    // Remove restauarnt from favorites
+    private void removeFromFavorites(){
+        String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        CollectionReference resRef = FirebaseFirestore.getInstance().collection("restaurants");
+
+        resRef.document(restaurantId)
+                .update("liked", FieldValue.arrayRemove(uID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                        Toast.makeText(RestaurantDetailActivity.this, "Restaurant removed from Favorites!", Toast.LENGTH_SHORT).show();
+                        updateUI(1);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Toast.makeText(RestaurantDetailActivity.this, "Error removing from Favorites!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // Add restaurant to favorites
+    private void addToFavorites(){
+        String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        CollectionReference resRef = FirebaseFirestore.getInstance().collection("restaurants");
+
+        resRef.document(restaurantId)
+                .update("liked", FieldValue.arrayUnion(uID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Toast.makeText(RestaurantDetailActivity.this, "Restaurant added to Favorites!", Toast.LENGTH_SHORT).show();
+                        updateUI(0);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Toast.makeText(RestaurantDetailActivity.this, "Error adding to Favorites!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+    }
+
+    // Add new ratings for restaurant
     private Task<Void> addRating(final DocumentReference restaurantRef,
                                  final Rating rating) {
         // Create reference for new rating, for use inside the transaction
@@ -243,9 +365,31 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mCityView.setText(restaurant.getCity());
         mCategoryView.setText(restaurant.getCategory());
         mPriceView.setText(RestaurantUtil.getPriceString(restaurant));
+        mRestaurantDetails.setText(restaurant.getDescription());
+        mRestaurantOpeningHours.setText(restaurant.getOpeningHours());
+
+        String lowIn ="";
+        Boolean firstString = true;
+
+        if(restaurant.getSugar() == 1){
+            lowIn = "Sugar";
+            firstString = false;
+        }
+        if(restaurant.getSalt() == 1){
+            lowIn = (firstString) ? "" : lowIn.concat(", ");
+            lowIn = lowIn.concat("Salt");
+            firstString = false;
+        }
+        if(restaurant.getFat() == 1){
+            lowIn = (firstString) ? "" : lowIn.concat(", ");
+            lowIn = lowIn.concat("Fat");
+        }
+
+        mRestaurantGoodForDetails.setText(lowIn);
 
         restaurantLat = restaurant.getX();
         restaurantLng = restaurant.getY();
+        restaurantName = restaurant.getName();
 
         // Background image
         Glide.with(mImageView.getContext())

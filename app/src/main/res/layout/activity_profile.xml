@@ -1,0 +1,515 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0"
+    tools:context="com.google.firebase.example.fireeats.FavoritesActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppTheme"
+        app:logo="@drawable/ic_profile_icon"
+        app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
+        app:title="Profile"
+        app:titleMarginStart="24dp"
+        app:titleTextColor="@android:color/white" />
+
+    <!-- Bottom navigation bar-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_bot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="#4285F4"
+        app:itemTextColor="@drawable/tab_color"
+        app:itemIconTint="@drawable/tab_color"
+        app:menu="@menu/drawer_menu"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/nav_bot"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <!-- User details-->
+                <TextView
+                    android:id="@+id/profile_page_name"
+                    style="@style/AppTheme.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="15dp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    tools:text="PLACEHOLDER_NAME" />
+
+                <TextView
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_name"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Age:"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/profile_page_age"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_name"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="230dp"
+                    android:layout_marginTop="15dp"
+                    android:textColor="@android:color/white"
+                    tools:text="PLACEHOLDER_AGE" />
+
+                <TextView
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_age"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Sex:"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/profile_page_sex"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_age"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="230dp"
+                    android:layout_marginTop="15dp"
+                    android:textColor="@android:color/white"
+                    tools:text="PLACEHOLDER_SEX" />
+
+                <TextView
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_sex"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Height:"
+                    android:textColor="@android:color/white" />
+
+                <LinearLayout
+                    android:id="@+id/profile_page_height_linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_sex"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="230dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/profile_page_height"
+                        style="@style/AppTheme.Subheader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        tools:text="PLACEHOLDER_HEIGHT" />
+
+                    <TextView
+                        style="@style/AppTheme.Subheader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:textColor="@android:color/white"
+                        android:text="cm" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_height_linear"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Weight:"
+                    android:textColor="@android:color/white" />
+
+                <LinearLayout
+                    android:id="@+id/profile_page_weight_linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_height_linear"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="230dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/profile_page_weight"
+                        style="@style/AppTheme.Subheader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        tools:text="PLACEHOLDER_WEIGHT" />
+
+                    <TextView
+                        style="@style/AppTheme.Subheader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:textColor="@android:color/white"
+                        android:text="kg" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                style="@style/AppTheme.Subheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="HEALTH INFORMATION"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
+
+            <!--Health Information-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="15dp"
+                    android:text="BMI:"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/profile_page_bmi"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="230dp"
+                    android:textColor="@android:color/white"
+                    tools:text="PLACEHOLDER_BMI" />
+
+                <TextView
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_bmi"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Cholesterol:"
+                    android:textColor="@android:color/white" />
+
+                <LinearLayout
+                    android:id="@+id/profile_page_cholesterol_linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_bmi"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="230dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/profile_page_cholesterol"
+                        style="@style/AppTheme.Subheader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        tools:text="PLACEHOLDER_CHOL" />
+
+                    <TextView
+                        style="@style/AppTheme.Subheader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:textColor="@android:color/white"
+                        android:text="mmol/L" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_cholesterol_linear"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Blood Pressure:"
+                    android:textColor="@android:color/white" />
+
+                <LinearLayout
+                    android:id="@+id/profile_page_bp_linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_cholesterol_linear"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="230dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/profile_page_bp"
+                        style="@style/AppTheme.Subheader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        tools:text="PLACEHOLDER_BP" />
+
+                    <TextView
+                        style="@style/AppTheme.Subheader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:textColor="@android:color/white"
+                        android:text="mmHg" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/profile_page_risk_level_title"
+                style="@style/AppTheme.Subheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="RISK LEVEL"
+                android:textColor="#FF0000"
+                android:textStyle="bold" />
+
+            <!--risk level-->
+            <RelativeLayout
+                android:id="@+id/profile_page_risk_level_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FF0000"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_risk_level"
+                    style="@style/AppTheme.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/white"
+                    tools:text="RISK_LEVEL_PLACEHOLDER" />
+            </RelativeLayout>
+
+            <TextView
+                style="@style/AppTheme.Subheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="HEALTH TIPS"
+                android:textColor="#4CAF50"
+                android:textStyle="bold" />
+
+            <!--health tip 1-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_1_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="1. Stay Physically Active"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_1_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip1"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
+
+            <!--health tip 2-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_2_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="2. Eat Healthy"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_2_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip2"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
+
+            <!--health tip 3-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_3_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="3. Be Smoke-free"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_3_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip3"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
+
+            <!--health tip 4-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_4_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="4. Keep Your Mind Active"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_4_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip4"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
+
+            <!--health tip 5-->
+            <RelativeLayout
+                android:id="@+id/profile_page_tip_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/greyDisabled"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:id="@+id/profile_page_tip_5_1"
+                    style="@style/AppTheme.Subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="5. Go for Health Screening"
+                    android:textColor="@color/greySecondary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/AppTheme.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_page_tip_5_1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/health_tip5"
+                    android:textColor="@color/greySecondary" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

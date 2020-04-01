@@ -1,22 +1,22 @@
 package com.google.firebase.example.fireeats;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,73 +27,109 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.example.fireeats.adapter.StepAdapter;
+import com.google.firebase.example.fireeats.model.PolylineData;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PendingResult;
+import com.google.maps.internal.PolylineEncoding;
+import com.google.maps.model.DirectionsResult;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.maps.model.DirectionsRoute;
+import com.google.maps.model.DirectionsStep;
+import com.google.maps.model.TravelMode;
 
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
-        //GoogleMap.OnMyLocationButtonClickListener,
-        //GoogleMap.OnMyLocationClickListener,
-        GoogleMap.OnMarkerClickListener {
+        View.OnClickListener,
+        GoogleMap.OnPolylineClickListener{
 
     private static final String TAG = "Map";
-    public static final String KEY_RESTAURANT_ID = "key_restaurant_id";
     public static final String RESTAURANT_LNG = "restaurant_lat";
     public static final String RESTAURANT_LAT = "restaurant_lng";
     public static final String RESTAURANT_NAME = "restaurant_name";
 
     private GoogleMap mMap;
-
     private FirebaseFirestore mFirestore;
-    private DocumentReference mRestaurantRef;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
+    private GeoApiContext geoApiContext = null;
 
     private double restaurantLat;
     private double restaurantLng;
     private String restaurantName;
     private double userLat = 1.353286;
     private double userLng = 103.682812;
+    private LatLng restaurantCoor;
+    private LatLng userCoor;
+    private Marker restaurantMarker;
+    private Marker userMarker;
+    private ArrayList<PolylineData> polylineData = new ArrayList<>();
+    private List<DirectionsStep> stepList = new ArrayList<>();;
+
+    private SupportMapFragment mapFragment;
+    private RecyclerView mDirectionsRecycler;
+    private RecyclerView.Adapter adapter;
+    private LinearLayout mModeLayout;
+    private Button mBtnGetDirections;
+    private Button mBtnDriving;
+    private Button mBtnTransit;
+    private Button mBtnWalk;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //setup GeoApiContext for directions api
+        if (geoApiContext == null) {
+            geoApiContext = new GeoApiContext.Builder().apiKey(getString(R.string.google_maps_key)).build();
+        }
+
+        //set up Firestore
         mFirestore = FirebaseFirestore.getInstance();
-        String restaurantId;
+
+        //get extras
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
-            throw new IllegalArgumentException("Must pass extra " + KEY_RESTAURANT_ID);
+            throw new IllegalArgumentException("Must pass extra ");
         } else {
-            restaurantId = bundle.getString(KEY_RESTAURANT_ID);
             restaurantLat = bundle.getDouble(RESTAURANT_LAT);
             restaurantLng = bundle.getDouble(RESTAURANT_LNG);
             restaurantName = bundle.getString(RESTAURANT_NAME);
-            Log.d(TAG, "onCreate: lat " + restaurantLat);
-            Log.d(TAG, "onCreate: lng " + restaurantLng);
+            Log.d(TAG, "onCreate: rlat " + restaurantLat);
+            Log.d(TAG, "onCreate: rlng " + restaurantLng);
             Log.d(TAG, "onCreate: name " + restaurantName);
         }
 
-        // Get reference to the restaurant
-        mRestaurantRef = mFirestore.collection("restaurants").document(restaurantId);
-     }
+        //set up layouts
+        mModeLayout = findViewById(R.id.modeLayout);
+        mDirectionsRecycler = findViewById(R.id.directionsRecycler);
+        mDirectionsRecycler.setHasFixedSize(false);
+        mDirectionsRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-    /*private void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch(requestCode){
-            case 10:
-                if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    locationManager.requestLocationUpdates("gps", 1000, 0, locationListener);
-        }
-    }*/
-
+        //set up buttons
+        mBtnGetDirections = findViewById(R.id.btnGetDirections);
+        mBtnGetDirections.setOnClickListener(this);
+        findViewById(R.id.map_back_button).setOnClickListener(this);
+        mBtnDriving = findViewById(R.id.btnDriving);
+        mBtnDriving.setOnClickListener(this);
+        mBtnTransit = findViewById(R.id.btnTransit);
+        mBtnTransit.setOnClickListener(this);
+        mBtnWalk = findViewById(R.id.btnWalk);
+        mBtnWalk.setOnClickListener(this);
+    }
 
     /**
      * Manipulates the map once available.
@@ -108,96 +144,183 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        /*mMap.setMyLocationEnabled(true);
-        mMap.setOnMyLocationButtonClickListener(this);
-        mMap.setOnMyLocationClickListener(this);*/
+        mMap.setOnPolylineClickListener(this);
 
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onMapReady: hi");
-        LatLng restaurantCoor = new LatLng(restaurantLat,restaurantLng);
+
+        restaurantCoor = new LatLng(restaurantLat,restaurantLng);
         Log.d(TAG, "lat = " + restaurantLat);
         Log.d(TAG, "lng = " + restaurantLng);
         Log.d(TAG, "name = " + restaurantName);
 
         //hardcoded userLoc until fixed
-        LatLng userCoor = new LatLng(userLat,userLng);
+        userCoor = new LatLng(userLat,userLng);
         Log.d(TAG, "onMapReady: userLat = " + userLat);
         Log.d(TAG, "onMapReady: userLng = " + userLng);
 
-        // Add a marker to restaurant and move the camera
-        mMap.addMarker(new MarkerOptions().position(restaurantCoor).title(restaurantName));
-        mMap.addMarker(new MarkerOptions().position(userCoor).title("You are here!"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantCoor, 15));
-        mMap.setOnMarkerClickListener(this);
+        //get distance between the 2 coordinates
+        float results[] = new float[10];
+        Location.distanceBetween(userLat,userLng,restaurantLat,restaurantLng,results);
 
-        LatLngBounds bounds = new LatLngBounds.Builder().include(restaurantCoor).include(userCoor).build();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,50));
-
-        /*userLoc();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION}, 10);
-            return;
-        }*/
-
-    }
-
-   /* @Override
-    public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-        return false;
+        //add markers
+        restaurantMarker = mMap.addMarker(new MarkerOptions()
+                .position(restaurantCoor)
+                .title(restaurantName)
+                .snippet("Distance = " + (int)(results[0]/1000) + "km"));
+        userMarker = mMap.addMarker(new MarkerOptions()
+                .position(userCoor)
+                .title("You are here!"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantCoor, 15));
+        restaurantMarker.showInfoWindow();
     }
 
     @Override
-    public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this,"Current location", Toast.LENGTH_LONG).show();
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnGetDirections:
+                calcDirections("driving");
+                //shows multiple markers in one screen
+                LatLngBounds bounds = new LatLngBounds.Builder().include(restaurantCoor).include(userCoor).build();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+
+                //setting up layout
+                mBtnDriving.setBackgroundColor(Color.GRAY);
+                mBtnTransit.setBackgroundColor(Color.LTGRAY);
+                mBtnWalk.setBackgroundColor(Color.LTGRAY);
+                break;
+            case R.id.map_back_button:
+                Log.d(TAG, "onClick: back arrow pressed");
+                onBackArrowClicked(v);
+                break;
+            case R.id.btnDriving:
+                calcDirections("driving");
+                mBtnDriving.setBackgroundColor(Color.GRAY);
+                mBtnTransit.setBackgroundColor(Color.LTGRAY);
+                mBtnWalk.setBackgroundColor(Color.LTGRAY);
+                break;
+            case R.id.btnTransit:
+                calcDirections("transit");
+                mBtnDriving.setBackgroundColor(Color.LTGRAY);
+                mBtnTransit.setBackgroundColor(Color.GRAY);
+                mBtnWalk.setBackgroundColor(Color.LTGRAY);
+                break;
+            case R.id.btnWalk:
+                calcDirections("walk");
+                mBtnDriving.setBackgroundColor(Color.LTGRAY);
+                mBtnTransit.setBackgroundColor(Color.LTGRAY);
+                mBtnWalk.setBackgroundColor(Color.GRAY);
+                break;
+        }
     }
 
-    //initialises map
-    private void initMap(){
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+    public void calcDirections(String mode){
+        DirectionsApiRequest directions = new DirectionsApiRequest(geoApiContext);
+        directions.origin(new com.google.maps.model.LatLng(userLat,userLng));
+        directions.destination(new com.google.maps.model.LatLng(restaurantLat,restaurantLng));
+        directions.alternatives(true); //return alternative routes
+
+        //set the different mode based on parameter
+        switch (mode) {
+            case "driving":
+                directions.mode(TravelMode.DRIVING);
+                break;
+            case "transit":
+                directions.mode(TravelMode.TRANSIT);
+                break;
+            case "walk":
+                directions.mode(TravelMode.WALKING);
+                break;
+        }
+        directions.setCallback(new PendingResult.Callback<DirectionsResult>() {
+            @Override
+            public void onResult(DirectionsResult result) {
+                Log.d(TAG, "onResult: directions calculated");
+                Log.d(TAG, "onResult: distance = " + result.routes[0].legs[0].distance);
+                traceRoute(result);
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                Log.d(TAG, "onFailure: failed to get directions " + e.getMessage());
+            }
+        });
     }
 
-    //get user current location
-    private void userLoc(){
-        //get user current location
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationListener = new LocationListener() {
+    public void traceRoute(DirectionsResult result){
+        //post method to run on the main thread
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            double shortestDuration = 99999999;
             @Override
-            public void onLocationChanged(Location location) {
-                userLat = location.getLatitude();
-                userLng = location.getLongitude();
-                Log.d(TAG, "onLocationChanged: userLat = " + userLat);
-                Log.d(TAG, "onLocationChanged: userLng = " + userLng);
-                //initMap();
+            public void run() {
+                //check if any polylines in the list. if yes, clear
+                if(polylineData.size()>0){
+                    for(PolylineData polylineD: polylineData){
+                        polylineD.getPolyline().remove();
+                    }
+                    polylineData.clear();
+                    Log.d(TAG, "run: cleared");
+                }
+                for(DirectionsRoute route : result.routes){
+                    List<com.google.maps.model.LatLng> gDecodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
+                    List<LatLng> aDecodedPath = new ArrayList<>();
+
+                    //looping through all the latlng in one polyline
+                    for(com.google.maps.model.LatLng latLng : gDecodedPath){
+                        aDecodedPath.add(new LatLng(latLng.lat,latLng.lng));
+                    }
+
+                    //creating the polyline based on all the latlng
+                    Polyline polyline = mMap.addPolyline(new PolylineOptions().addAll(aDecodedPath));
+                    polyline.setClickable(true);
+                    polyline.setColor(Color.DKGRAY);
+                    polylineData.add(new PolylineData(polyline,route.legs[0]));
+
+                    //get fastest route and highlight it
+                    if(route.legs[0].duration.inSeconds < shortestDuration){
+                        shortestDuration = route.legs[0].duration.inSeconds;
+                        onPolylineClick(polyline);
+                    }
+                }
             }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            }
-        };
-    }*/
+        });
+    }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
-        return false;
+    public void onPolylineClick(Polyline polyline) {
+
+        //iterating through all the polylines in the polylineData to find selected polyline
+        for(PolylineData mPolylineData : polylineData){
+            if(polyline.getId().equals(mPolylineData.getPolyline().getId())){
+                polyline.setColor(Color.BLUE);
+                polyline.setZIndex(1); //set elevation of selected polyline
+
+                if(stepList.size()>0){
+                    stepList.clear();
+                }
+                stepList.addAll(Arrays.asList(mPolylineData.getDirectionsLeg().steps));
+
+                Log.d(TAG, "onPolylineClick: step = " + mPolylineData.getDirectionsLeg().steps[0]);
+                restaurantMarker.setTag(mPolylineData);
+                restaurantMarker.setSnippet("Duration = " + mPolylineData.getDirectionsLeg().duration);
+                restaurantMarker.showInfoWindow();
+                Log.d(TAG, "onPolylineClick: tag =" + restaurantMarker.getTag());
+
+            }
+            else{
+                mPolylineData.getPolyline().setColor(Color.DKGRAY);
+                mPolylineData.getPolyline().setZIndex(0);
+            }
+        }
+
+        //setting layout
+        mModeLayout.setVisibility(View.VISIBLE);
+        mBtnGetDirections.setVisibility(View.GONE);
+        mDirectionsRecycler.setVisibility(View.VISIBLE);
+        adapter = new StepAdapter(stepList,this);
+        mDirectionsRecycler.setAdapter(adapter);
     }
 
+    public void onBackArrowClicked(View view) {
+        onBackPressed();
+    }
 }

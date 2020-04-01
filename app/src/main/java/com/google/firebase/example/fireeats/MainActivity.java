@@ -2,9 +2,9 @@ package com.google.firebase.example.fireeats;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,13 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.example.fireeats.adapter.RestaurantAdapter;
-import com.google.firebase.example.fireeats.model.Restaurant;
-import com.google.firebase.example.fireeats.util.RestaurantUtil;
-import com.google.firebase.example.fireeats.viewmodel.MainActivityViewModel;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -60,9 +58,11 @@ public class MainActivity extends AppCompatActivity implements
     private RestaurantAdapter mAdapter;
 
     private MainActivityViewModel mViewModel;
+    private BottomNavigationView bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -73,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements
         mCurrentSortByView = findViewById(R.id.text_current_sort_by);
         mRestaurantsRecycler = findViewById(R.id.recycler_restaurants);
         mEmptyView = findViewById(R.id.view_empty);
+
+        bottomNavigation = findViewById(R.id.nav_bot);
+        bottomNavigation.setOnNavigationItemSelectedListener(navListener);
+        bottomNavigation.setSelectedItemId(R.id.restaurant_page);
 
         findViewById(R.id.filter_bar).setOnClickListener(this);
         findViewById(R.id.button_clear_filter).setOnClickListener(this);
@@ -162,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    // Check if user have already entered their health info
+    // Required. In order to user the app
     private void needEnterUserInfo(){
         DocumentReference docRef = mFirestore.collection("users")
                                              .document(FirebaseAuth.getInstance()
@@ -252,6 +258,26 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    switch(item.getItemId()){
+                        case R.id.restaurant_page:
+                            break;
+                        case R.id.favorites_page:
+                            startActivity(new Intent(getBaseContext(), FavoritesActivity.class));
+                            overridePendingTransition(0,0);
+                            break;
+                        case R.id.profile_page:
+                            startActivity(new Intent(getBaseContext(), ProfileActivity.class));
+                            overridePendingTransition(0,0);
+                            break;
+                    }
+                return true;
+                }
+            };
+
     public void onFilterClicked() {
         // Show the dialog containing filter options
         mFilterDialog.show(getSupportFragmentManager(), FilterDialogFragment.TAG);
@@ -286,9 +312,5 @@ public class MainActivity extends AppCompatActivity implements
 
         startActivityForResult(intent, RC_SIGN_IN);
         mViewModel.setIsSigningIn(true);
-    }
-
-    private void showTodoToast() {
-        Toast.makeText(this, "TODO: Implement", Toast.LENGTH_SHORT).show();
     }
 }

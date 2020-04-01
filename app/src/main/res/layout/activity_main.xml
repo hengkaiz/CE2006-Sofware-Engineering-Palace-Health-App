@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:theme="@style/AppTheme"
-        app:logo="@drawable/ic_restaurant_white_24px"
+        app:logo="@drawable/ic_restaurant_icon"
         app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
         app:title="@string/app_name"
         app:titleMarginStart="24dp"
@@ -77,7 +77,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sorted_by_rating"
-                        android:textColor="@color/greyDisabled" />
+                        android:textColor="@color/greySecondary" />
 
                 </LinearLayout>
 
@@ -101,8 +101,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_restaurants"
         android:layout_width="match_parent"
-        android:layout_height="581dp"
+        android:layout_height="533dp"
+        android:layout_above="@+id/nav_bot"
         android:layout_below="@+id/filter_bar_container"
+        android:layout_marginBottom="0dp"
         android:background="@android:color/white"
         tools:listitem="@layout/item_restaurant" />
 
