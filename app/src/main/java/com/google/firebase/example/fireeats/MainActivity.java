@@ -102,10 +102,13 @@ public class MainActivity extends AppCompatActivity implements
     private void initFirestore() {
         mFirestore = FirebaseFirestore.getInstance();
 
+        Filters filters = mViewModel.getFilters();
+
         // Get the 50 highest rated restaurants
-        mQuery = mFirestore.collection("restaurants")
-                .orderBy("avgRating", Query.Direction.DESCENDING)
-                .limit(LIMIT);
+        mQuery = mFirestore.collection("restaurants");
+
+        mQuery = mQuery.whereLessThanOrEqualTo("x_y", filters.getUpperLimit()).whereGreaterThanOrEqualTo("x_y", filters.getLowerLimit())
+                .orderBy("x_y", Query.Direction.DESCENDING).limit(LIMIT);
     }
 
     private void initRecyclerView() {
@@ -171,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     // Check if user have already entered their health info
-    // Required. In order to user the app
+    // Required. In order to use the app
     private void needEnterUserInfo(){
         DocumentReference docRef = mFirestore.collection("users")
                                              .document(FirebaseAuth.getInstance()
@@ -209,18 +212,16 @@ public class MainActivity extends AppCompatActivity implements
             query = query.whereEqualTo("category", filters.getCategory());
         }
 
-        // City (equality filter)
-        /*
-       query = query.whereLessThanOrEqualTo("x_y", filters.getXup())
-               .whereLessThanOrEqualTo("x_y", filters.getYup())
-               .whereGreaterThanOrEqualTo("x_y", filters.getXdown())
-               .whereGreaterThanOrEqualTo("x_y", filters.getYdown());
-           */
-
         // Price (equality filter)
         if (filters.hasPrice()) {
             query = query.whereEqualTo("price", filters.getPrice());
         }
+
+        // City (equality filter)
+        query = query.whereLessThanOrEqualTo("x_y", filters.getUpperLimit())
+                .whereGreaterThanOrEqualTo("x_y", filters.getLowerLimit())
+                .orderBy("x_y", Query.Direction.DESCENDING);
+
 
         // Sort by (orderBy with direction)
         if (filters.hasSortBy()) {

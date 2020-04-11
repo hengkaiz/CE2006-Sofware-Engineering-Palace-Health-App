@@ -57,7 +57,7 @@
 
     <!-- 50 most populous cities in the US -->
     <string-array name="cities">
-        <item>All</item>
+        <item>Nearby</item>
 
         <!--<item>North</item>
         <item>South</item>

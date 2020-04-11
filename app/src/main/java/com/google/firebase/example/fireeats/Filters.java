@@ -22,6 +22,8 @@ import com.google.firebase.example.fireeats.model.Restaurant;
 import com.google.firebase.example.fireeats.util.RestaurantUtil;
 import com.google.firebase.firestore.Query;
 
+import java.text.DecimalFormat;
+
 import static java.lang.StrictMath.abs;
 
 /**
@@ -35,20 +37,32 @@ public class Filters {
     private String sortBy = null;
     private Query.Direction sortDirection = null;
 
-    private long userCoordinatesX = 1405256000000000L;
-    private long userCoordinatesY = 103902334;
+    private double userCoordinatesLat = 1.348326; //1348326103683129L
+    private double userCoordinatesLon = 103.683129; //103683129
 
-    private long xup = 1550278000000000L + userCoordinatesY ; //1398333000000000L;
-    private long xdown = 1260278000000000L + userCoordinatesY; //130833300000000L;
-    private long yup = userCoordinatesX + 104047200; //103727800;
-    private long ydown = userCoordinatesX + 103557200; //103637800;
+    private long upperLimit = -1;
+    private long lowerLimit = -1;
 
-    public Filters() {}
+    private double[] calCoordinates = {0,0};
+
+    // Set the upper and lower coordinate limits based on user coordinate
+    public Filters() {
+        getNewCoordinates(/*latitude*/ getUserCoordinatesLat(),
+                /*longitude*/ getUserCoordinatesLon(),
+                /*bearing*/315, /*distance(nm)*/3);
+        setUpperLimit(getCalCoordinatesLat(), getCalCoodinatesLong());
+
+        getNewCoordinates(/*latitude*/ getUserCoordinatesLat(),
+                /*longitude*/ getUserCoordinatesLon(),
+                /*bearing*/135, /*distance(nm``)*/3);
+        setLowerLimit(getCalCoordinatesLat(), getCalCoodinatesLong());
+    }
 
     public static Filters getDefault() {
         Filters filters = new Filters();
         filters.setSortBy(Restaurant.FIELD_AVG_RATING);
         filters.setSortDirection(Query.Direction.DESCENDING);
+        filters.setCity("Nearby");
 
         return filters;
     }
@@ -83,15 +97,6 @@ public class Filters {
 
     public void setCity(String city) {
         this.city = city;
-        switch(city){
-            case "Nearby":
-                this.xup = 1450278000000000L + userCoordinatesY ; //1398333000000000L;
-                this.xdown = 1360278000000000L + userCoordinatesY; //130833300000000L;
-                this.yup = userCoordinatesX + 103947200; //103727800;
-                this.ydown = userCoordinatesX + 103857200; //103637800;
-                break;
-
-        }
     }
 
     public int getPrice() {
@@ -163,35 +168,83 @@ public class Filters {
         }
     }
 
-    public double getXup() {
-        return xup;
+    public double getUserCoordinatesLat() {
+        return userCoordinatesLat;
     }
 
-    public void setXup(long xup) {
-        this.xup = xup;
+    public void setUserCoordinatesLat(double userCoordinatesLat) {
+        this.userCoordinatesLat = userCoordinatesLat;
     }
 
-    public double getXdown() {
-        return xdown;
+    public double getUserCoordinatesLon() {
+        return userCoordinatesLon;
     }
 
-    public void setXdown(long xdown) {
-        this.xdown = xdown;
+    public void setUserCoordinatesLon(double userCoordinatesLon) {
+        this.userCoordinatesLon = userCoordinatesLon;
     }
 
-    public double getYup() {
-        return yup;
+    public long getUpperLimit() {
+        return upperLimit;
     }
 
-    public void setYup(long yup) {
-        this.yup = yup;
+    public void setUpperLimit(double lat, double lon) {
+        long lat1 = Math.round((lat*Math.pow(10, 6)));
+        long lon1 = Math.round((lon*Math.pow(10,6)));
+        this.upperLimit = (long) (lon1*Math.pow(10,7) + lat1);
     }
 
-    public double getYdown() {
-        return ydown;
+    public long getLowerLimit() {
+        return lowerLimit;
     }
 
-    public void setYdown(long ydown) {
-        this.ydown = ydown;
+    public void setLowerLimit(double lat, double lon) {
+        long lat1 = Math.round((lat*Math.pow(10, 6)));
+        long lon1 = Math.round((lon*Math.pow(10,6)));
+        this.lowerLimit = (long) (lon1*Math.pow(10,7) + lat1);
+    }
+
+    // Calculates the new coordinates based
+    // tc -> bearing. north (0 degrees), northeast (315 degrees)
+    // d -> nautical miles
+    private void getNewCoordinates(double lat1, double lon1, double tc, double d) {
+        // convert to radians
+        lat1 = lat1 * Math.PI / 180;
+        lon1 = lon1 * Math.PI / 180;
+        tc = tc * Math.PI / 180;
+        d = (Math.PI / (180*60)) * d;
+
+        double lat = Math.asin(
+                Math.sin(lat1) * Math.cos(d)
+                        + Math.cos(lat1) * Math.sin(d) * Math.cos(tc)
+        );
+
+        double dlon= Math.atan2(
+                Math.sin(tc) * Math.sin(d) * Math.cos(lat1)
+                , Math.cos(d) - Math.sin(lat1) * Math.sin(lat));
+        double lon = ((lon1 - dlon + Math.PI) % (2 * Math.PI)) - Math.PI;
+
+        // convert to degrees
+        lat = lat * 180 / Math.PI;
+        lon = lon * 180 / Math.PI;
+
+        setCalCoordinatesLat(lat);
+        setCalCoordinatesLong(lon);
+    }
+
+    private void setCalCoordinatesLong(double lon) {
+        this.calCoordinates[1] = lon;
+    }
+
+    private void setCalCoordinatesLat(double lat){
+        this.calCoordinates[0] = lat;
+    }
+
+    private double getCalCoodinatesLong(){
+        return this.calCoordinates[1];
+    }
+
+    private double getCalCoordinatesLat(){
+        return this.calCoordinates[0];
     }
 }
