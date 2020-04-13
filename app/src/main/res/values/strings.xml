@@ -57,12 +57,12 @@
 
     <!-- 50 most populous cities in the US -->
     <string-array name="cities">
-        <item>@string/value_any_city</item>
+        <item>Nearby</item>
 
-        <item>North</item>
+        <!--<item>North</item>
         <item>South</item>
         <item>East</item>
-        <item>West</item>
+        <item>West</item>-->
 
     </string-array>
 

@@ -2,26 +2,25 @@ package com.google.firebase.example.fireeats;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +30,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
@@ -98,10 +102,13 @@ public class MainActivity extends AppCompatActivity implements
     private void initFirestore() {
         mFirestore = FirebaseFirestore.getInstance();
 
+        Filters filters = mViewModel.getFilters();
+
         // Get the 50 highest rated restaurants
-        mQuery = mFirestore.collection("restaurants")
-                .orderBy("avgRating", Query.Direction.DESCENDING)
-                .limit(LIMIT);
+        mQuery = mFirestore.collection("restaurants");
+
+        mQuery = mQuery.whereLessThanOrEqualTo("x_y", filters.getUpperLimit()).whereGreaterThanOrEqualTo("x_y", filters.getLowerLimit())
+                .orderBy("x_y", Query.Direction.DESCENDING).limit(LIMIT);
     }
 
     private void initRecyclerView() {
@@ -167,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     // Check if user have already entered their health info
-    // Required. In order to user the app
+    // Required. In order to use the app
     private void needEnterUserInfo(){
         DocumentReference docRef = mFirestore.collection("users")
                                              .document(FirebaseAuth.getInstance()
@@ -205,15 +212,16 @@ public class MainActivity extends AppCompatActivity implements
             query = query.whereEqualTo("category", filters.getCategory());
         }
 
-        // City (equality filter)
-        if (filters.hasCity()) {
-            query = query.whereEqualTo("city", filters.getCity());
-        }
-
         // Price (equality filter)
         if (filters.hasPrice()) {
             query = query.whereEqualTo("price", filters.getPrice());
         }
+
+        // City (equality filter)
+        query = query.whereLessThanOrEqualTo("x_y", filters.getUpperLimit())
+                .whereGreaterThanOrEqualTo("x_y", filters.getLowerLimit())
+                .orderBy("x_y", Query.Direction.DESCENDING);
+
 
         // Sort by (orderBy with direction)
         if (filters.hasSortBy()) {
