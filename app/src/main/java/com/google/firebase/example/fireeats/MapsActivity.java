@@ -2,21 +2,18 @@ package com.google.firebase.example.fireeats;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -26,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -36,6 +34,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.example.fireeats.adapter.StepAdapter;
 import com.google.firebase.example.fireeats.model.PolylineData;
+import com.google.firebase.example.fireeats.util.ApiUtil;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
@@ -43,6 +42,13 @@ import com.google.maps.PendingResult;
 import com.google.maps.internal.PolylineEncoding;
 import com.google.maps.model.DirectionsResult;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +56,9 @@ import java.util.List;
 import com.google.maps.model.DirectionsRoute;
 import com.google.maps.model.DirectionsStep;
 import com.google.maps.model.TravelMode;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -72,8 +81,10 @@ public class MapsActivity extends AppCompatActivity implements
     private double userLng = 103.683129; //103.683129;//103.682812;
     private LatLng restaurantCoor;
     private LatLng userCoor;
+    private LatLng taxiCoor;
     private Marker restaurantMarker;
     private Marker userMarker;
+    private Marker taxiMarker;
     private ArrayList<PolylineData> polylineData = new ArrayList<>();
     private List<DirectionsStep> stepList = new ArrayList<>();;
 
@@ -86,6 +97,7 @@ public class MapsActivity extends AppCompatActivity implements
     private Button mBtnTransit;
     private Button mBtnWalk;
 
+    private String taxiCoordinates;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,8 +172,6 @@ public class MapsActivity extends AppCompatActivity implements
         mMap = googleMap;
         mMap.setOnPolylineClickListener(this);
 
-        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
-
         restaurantCoor = new LatLng(restaurantLat,restaurantLng);
         Log.d(TAG, "lat = " + restaurantLat);
         Log.d(TAG, "lng = " + restaurantLng);
@@ -201,6 +211,11 @@ public class MapsActivity extends AppCompatActivity implements
                 mBtnDriving.setBackgroundColor(Color.GRAY);
                 mBtnTransit.setBackgroundColor(Color.LTGRAY);
                 mBtnWalk.setBackgroundColor(Color.LTGRAY);
+
+                Toast toast = Toast.makeText(this, "Loading...", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP,0,0);
+                toast.show();
+                loadAPIUrl();
                 break;
             case R.id.map_back_button:
                 Log.d(TAG, "onClick: back arrow pressed");
@@ -224,6 +239,104 @@ public class MapsActivity extends AppCompatActivity implements
                 mBtnTransit.setBackgroundColor(Color.LTGRAY);
                 mBtnWalk.setBackgroundColor(Color.GRAY);
                 break;
+        }
+    }
+
+    // Load api url
+    private void loadAPIUrl(){
+        try{
+            String govURL = "https://api.data.gov.sg/v1/transport/taxi-availability";
+            new JsonTask().execute(govURL);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Get result from govt API
+    private class JsonTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                InputStream stream = connection.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuffer buffer = new StringBuffer();
+                String line = "";
+
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line+"\n");
+                    Log.d("Response: ", "> " + line);
+                }
+                return buffer.toString();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            ApiUtil apiUtil = new ApiUtil(result, userLat, userLng);
+            JSONArray taxiArray = apiUtil.convertToObj();
+            showTaxiMarkers(taxiArray);
+        }
+    }
+
+    // Show available taxi as gmap marker
+    private void showTaxiMarkers(JSONArray taxiArray){
+        int length = taxiArray.length();
+        JSONArray temp;
+        double lat, lng;
+        float results[] = new float[10];
+
+        for(int i=0;i<length;i++){
+            try {
+                temp = taxiArray.getJSONArray(i);
+                lat = temp.getDouble(1);
+                lng = temp.getDouble(0);
+                taxiCoor = new LatLng(lat, lng);
+                Location.distanceBetween(userLat,userLng,lat,lng,results);
+                if(results[0] < 1000) {
+                    taxiMarker = mMap.addMarker(new MarkerOptions()
+                            .position(taxiCoor)
+                            .snippet((int) (results[0]) + "m away!")
+                            .alpha((float) 0.8)
+                            .title("Taxi!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
