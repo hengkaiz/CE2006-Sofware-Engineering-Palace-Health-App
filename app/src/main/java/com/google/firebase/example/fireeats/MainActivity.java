@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -155,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements
         while(FirebaseAuth.getInstance().getCurrentUser() == null);
 
         needEnterUserInfo();
+        Toast.makeText(this, "Successfully Logged in!", Toast.LENGTH_SHORT).show();
 
         // Apply filters
         onFilter(mViewModel.getFilters());
