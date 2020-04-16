@@ -434,8 +434,26 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mCategoryView.setText(restaurant.getCategory());
         mPriceView.setText(RestaurantUtil.getPriceString(restaurant));
         mRestaurantDetails.setText(restaurant.getDescription());
-        // mRestaurantOpeningHours.setText();
-        // mRestaurantGoodForDetails.setText();
+        mRestaurantOpeningHours.setText(restaurant.getOpeningHours());
+
+        String lowIn ="";
+        Boolean firstString = true;
+
+        if(restaurant.getSugar() == 1){
+            lowIn = "Sugar";
+            firstString = false;
+        }
+        if(restaurant.getSalt() == 1){
+            lowIn = (firstString) ? "" : lowIn.concat(", ");
+            lowIn = lowIn.concat("Salt");
+            firstString = false;
+        }
+        if(restaurant.getFat() == 1){
+            lowIn = (firstString) ? "" : lowIn.concat(", ");
+            lowIn = lowIn.concat("Fat");
+        }
+
+        mRestaurantGoodForDetails.setText(lowIn);
 
         restaurantLat = restaurant.getX();
         restaurantLng = restaurant.getY();

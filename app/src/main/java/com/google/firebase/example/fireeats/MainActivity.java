@@ -156,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements
         while(FirebaseAuth.getInstance().getCurrentUser() == null);
 
         needEnterUserInfo();
-        Toast.makeText(this, "Successfully Logged in!", Toast.LENGTH_SHORT).show();
 
         // Apply filters
         onFilter(mViewModel.getFilters());
