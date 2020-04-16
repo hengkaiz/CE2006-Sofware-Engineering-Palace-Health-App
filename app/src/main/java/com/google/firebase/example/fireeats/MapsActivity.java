@@ -90,8 +90,8 @@ public class MapsActivity extends AppCompatActivity implements
     private double restaurantLat;
     private double restaurantLng;
     private String restaurantName;
-    private double userLat;// = 1.348326; //1.348326;//1.353286;
-    private double userLng;// = 103.683129; //103.683129;//103.682812;
+    private double userLat;// = 1.369053;// = 1.348326; //1.348326;//1.353286;
+    private double userLng;// = 103.960883;// = 103.683129; //103.683129;//103.682812;
     private LatLng restaurantCoor;
     private LatLng userCoor;
     private LatLng taxiCoor;
@@ -534,7 +534,9 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMyLocationButtonClick() {
-        return false;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userCoor, 15));
+        userMarker.showInfoWindow();
+        return true;
     }
 
     @Override

@@ -1,7 +1,15 @@
 package com.google.firebase.example.fireeats;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +35,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.example.fireeats.adapter.RestaurantAdapter;
+import com.google.firebase.example.fireeats.model.Restaurant;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -65,6 +75,12 @@ public class MainActivity extends AppCompatActivity implements
     private MainActivityViewModel mViewModel;
     private BottomNavigationView bottomNavigation;
 
+    private LocationManager locMag;
+    private LocationListener locList;
+    private double uLat = 1.369053;
+    private double uLng = 103.960883;
+    //private Filters filtersD;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -98,12 +114,55 @@ public class MainActivity extends AppCompatActivity implements
 
         // Filter Dialog
         mFilterDialog = new FilterDialogFragment();
+
+        locMag = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locList = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                //uLat = location.getLatitude();
+                //uLng = location.getLongitude();
+                Log.d(TAG, "onLocationChanged: userLat" + location.getLatitude());
+                Log.d(TAG, "onLocationChanged: userLng" + location.getLongitude());
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locMag.requestLocationUpdates("gps", 5000, 0, locList);
     }
 
     private void initFirestore() {
         mFirestore = FirebaseFirestore.getInstance();
 
         Filters filters = mViewModel.getFilters();
+        /*Log.d(TAG, "initFirestore: uLatB" + filters.getUserCoordinatesLat());
+        Log.d(TAG, "initFirestore: ulngB" + filters.getUserCoordinatesLon());
+        filters.setUserCoordinatesLat(uLat);
+        filters.setUserCoordinatesLon(uLng);
+        Log.d(TAG, "initFirestore: uLat" + filters.getUserCoordinatesLat());
+        Log.d(TAG, "initFirestore: ulng" + filters.getUserCoordinatesLon());*/
 
         // Get the 50 highest rated restaurants
         mQuery = mFirestore.collection("restaurants");
@@ -153,12 +212,51 @@ public class MainActivity extends AppCompatActivity implements
             return;
         }
 
-        while(FirebaseAuth.getInstance().getCurrentUser() == null);
+        while (FirebaseAuth.getInstance().getCurrentUser() == null) ;
 
         needEnterUserInfo();
 
+        //onFilter(filtersD);
+
+        /*new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                // Apply filters
+                Filters filters = new Filters(uLat,uLng);
+                filters.setSortBy(Restaurant.FIELD_AVG_RATING);
+                filters.setSortDirection(Query.Direction.DESCENDING);
+                filters.setCity("Nearby");
+                /*filters.setUserCoordinatesLat(uLat);
+                filters.setUserCoordinatesLon(uLng);
+                filters.setUpperLimit(uLat,uLng);
+                filters.setLowerLimit(uLat,uLng);*/
+                /*Log.d(TAG, "initFirestore: uLat" + filters.getUserCoordinatesLat());
+                Log.d(TAG, "initFirestore: ulng" + filters.getUserCoordinatesLon());
+                Log.d(TAG, "onStart: upperLimit " + filters.getUpperLimit());
+                Log.d(TAG, "onStart: lowerlimit " + filters.getLowerLimit());
+                onFilter(filters);
+            }
+        });*/
+
+
         // Apply filters
-        onFilter(mViewModel.getFilters());
+        Filters filters = new Filters(uLat,uLng);
+        filters.setSortBy(Restaurant.FIELD_AVG_RATING);
+        filters.setSortDirection(Query.Direction.DESCENDING);
+        filters.setCity("Nearby");
+        /*filters.setUserCoordinatesLat(uLat);
+        filters.setUserCoordinatesLon(uLng);
+        filters.setUpperLimit(uLat,uLng);
+        filters.setLowerLimit(uLat,uLng);*/
+        Log.d(TAG, "initFirestore: uLat" + filters.getUserCoordinatesLat());
+        Log.d(TAG, "initFirestore: ulng" + filters.getUserCoordinatesLon());
+        Log.d(TAG, "onStart: upperLimit " + filters.getUpperLimit());
+        Log.d(TAG, "onStart: lowerlimit " + filters.getLowerLimit());
+        onFilter(filters);
+
+
+        //Apply filters
+        //onFilter(mViewModel.getFilters());*/
 
         // Start listening for Firestore updates
         if (mAdapter != null) {
@@ -205,8 +303,18 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onFilter(Filters filters) {
+
+        Log.d(TAG, "onFilterB: uLat " + filters.getUserCoordinatesLat());
+        Log.d(TAG, "onFilterB: uLng " + filters.getUserCoordinatesLon());
+        //filters.setUserCoordinatesLat(uLat);
+        //filters.setUserCoordinatesLon(uLng);
+
         // Construct query basic query
         Query query = mFirestore.collection("restaurants");
+
+
+        //Log.d(TAG, "onFilter: uLat " + filters.getUserCoordinatesLat());
+        //Log.d(TAG, "onFilter: uLng " + filters.getUserCoordinatesLon());
 
         // Category (equality filter)
         if (filters.hasCategory()) {
@@ -303,6 +411,8 @@ public class MainActivity extends AppCompatActivity implements
         // Go to the details page for the selected restaurant
         Intent intent = new Intent(this, RestaurantDetailActivity.class);
         intent.putExtra(RestaurantDetailActivity.KEY_RESTAURANT_ID, restaurant.getId());
+        intent.putExtra(RestaurantDetailActivity.USER_LAT, uLat);
+        intent.putExtra(RestaurantDetailActivity.USER_LNG, uLng);
 
         startActivity(intent);
     }

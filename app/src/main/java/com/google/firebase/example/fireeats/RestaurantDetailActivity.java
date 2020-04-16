@@ -83,6 +83,8 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
     private static final String TAG = "RestaurantDetail";
 
     public static final String KEY_RESTAURANT_ID = "key_restaurant_id";
+    public static final String USER_LAT = "user_lat";
+    public static final String USER_LNG = "user_lng";
 
     private ImageView mImageView;
     private TextView mNameView;
@@ -145,9 +147,21 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         findViewById(R.id.unfavorite_restaurant).setOnClickListener(this);
 
         // Get restaurant ID from extras
-        restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
+        /*restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
         if (restaurantId == null) {
             throw new IllegalArgumentException("Must pass extra " + KEY_RESTAURANT_ID);
+        }*/
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle == null) {
+            throw new IllegalArgumentException("Must pass extra ");
+        } else {
+            restaurantId = bundle.getString(KEY_RESTAURANT_ID);
+            uLat = bundle.getDouble(USER_LAT);
+            uLng = bundle.getDouble(USER_LNG);
+            Log.d(TAG, "onCreate: rlat " + restaurantLat);
+            Log.d(TAG, "onCreate: rlng " + restaurantLng);
+            Log.d(TAG, "onCreate: name " + restaurantName);
         }
 
         uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -200,9 +214,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
 
         mRatingDialog = new RatingDialogFragment();
 
-        client = LocationServices.getFusedLocationProviderClient(this);
+        //client = LocationServices.getFusedLocationProviderClient(this);
 
-        locMag = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        /*locMag = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locList = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -237,7 +251,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locMag.requestLocationUpdates("gps", 5000, 0, locList);
+        locMag.requestLocationUpdates("gps", 5000, 0, locList);*/
     }
 
     @Override
