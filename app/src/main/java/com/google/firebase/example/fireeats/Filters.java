@@ -45,7 +45,10 @@ public class Filters {
 
     private double[] calCoordinates = {0,0};
 
-    // Set the upper and lower coordinate limits based on user coordinate
+    /**
+     * Constructor for object
+     * Generate upper and lower restaurant coordinate limits based on the user's coordinates
+     */
     public Filters() {
         getNewCoordinates(/*latitude*/ getUserCoordinatesLat(),
                 /*longitude*/ getUserCoordinatesLon(),
@@ -72,6 +75,9 @@ public class Filters {
         setLowerLimit(getCalCoordinatesLat(), getCalCoodinatesLong());
     }
 
+    /**
+     * Sets the default filter options
+     */
     public static Filters getDefault() {
         Filters filters = new Filters();
         filters.setSortBy(Restaurant.FIELD_AVG_RATING);
@@ -137,6 +143,9 @@ public class Filters {
         this.sortDirection = sortDirection;
     }
 
+    /**
+     * Sets the sorting direction for different filters
+     */
     public String getSearchDescription(Context context) {
         StringBuilder desc = new StringBuilder();
 
@@ -218,9 +227,13 @@ public class Filters {
         this.lowerLimit = (long) (lon1*Math.pow(10,7) + lat1);
     }
 
-    // Calculates the new coordinates based
-    // tc -> bearing. north (0 degrees), northeast (315 degrees)
-    // d -> nautical miles
+    /**
+     * Calculates the new coordinates based on
+     * @param lat1 is the latitude
+     * @param lon1 is the longitude
+     * @param tc is the bearing. north (0 degrees), northeast (315 degrees)
+     * @param d is the distance (nautical miles)
+     */
     private void getNewCoordinates(double lat1, double lon1, double tc, double d) {
         // convert to radians
         lat1 = lat1 * Math.PI / 180;

@@ -27,7 +27,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-// Utilities for Restaurants.
+/**
+ * Utilities for the restaurant
+ */
 public class RestaurantUtil {
 
     private static final String TAG = "RestaurantUtil";
@@ -35,12 +37,18 @@ public class RestaurantUtil {
     private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(2, 4, 60,
             TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
-    // Get price represented as dollar signs.
+    /**
+     * Get price from restaurant object
+     * @param restaurant is the restaurant object of the selected restaurant
+     */
     public static String getPriceString(Restaurant restaurant) {
         return getPriceString(restaurant.getPrice());
     }
 
-    // Get price represented as dollar signs.
+    /**
+     * Get price represented as dollar signs
+     * @param priceInt is average price of the food in the restaurant
+     */
     public static String getPriceString(int priceInt) {
         switch (priceInt) {
             case 1:

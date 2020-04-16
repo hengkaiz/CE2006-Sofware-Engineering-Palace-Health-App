@@ -35,6 +35,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Favorites activity containing restaurants favorite by the user
+ */
 public class FavoritesActivity extends AppCompatActivity implements
         View.OnClickListener,
         RestaurantAdapter.OnRestaurantSelectedListener {
@@ -71,6 +74,9 @@ public class FavoritesActivity extends AppCompatActivity implements
         initRecyclerView();
     }
 
+    /**
+     * Initializes firestore
+     */
     private void initFirestore() {
         mFirestore = FirebaseFirestore.getInstance();
         String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -78,6 +84,9 @@ public class FavoritesActivity extends AppCompatActivity implements
         mQuery = mFirestore.collection("restaurants").whereArrayContains("liked", uID);
     }
 
+    /**
+     * Initializes recycler view to show restaurant fragments
+     */
     private void initRecyclerView() {
         if (mQuery == null) {
             Log.w(TAG, "No query, not initializing RecyclerView");

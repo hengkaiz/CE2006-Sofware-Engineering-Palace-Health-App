@@ -29,6 +29,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
+/**
+ * Profile activity containing information about the user
+ */
 public class ProfileActivity extends AppCompatActivity implements
         EventListener<DocumentSnapshot> {
 
@@ -142,7 +145,9 @@ public class ProfileActivity extends AppCompatActivity implements
         }
     }
 
-
+    /**
+     * Bottom navigation menu
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override

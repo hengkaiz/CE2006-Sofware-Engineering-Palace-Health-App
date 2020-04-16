@@ -69,6 +69,9 @@ import com.google.maps.model.TravelMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+/**
+ * Map activity contains map to showcase location of restaurant as well as directions to it
+ */
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         View.OnClickListener,
@@ -161,44 +164,6 @@ public class MapsActivity extends AppCompatActivity implements
         mBtnTransit.setOnClickListener(this);
         mBtnWalk = findViewById(R.id.btnWalk);
         mBtnWalk.setOnClickListener(this);
-
-
-      /*  locMag = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locList = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                userLat = location.getLatitude();
-                userLng = location.getLongitude();
-                Log.d(TAG, "onLocationChanged: userLat" + location.getLatitude());
-                Log.d(TAG, "onLocationChanged: userLng" + location.getLongitude());
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locMag.requestLocationUpdates("gps", 5000, 0, locList);*/
     }
 
     /**
@@ -259,26 +224,6 @@ public class MapsActivity extends AppCompatActivity implements
         restaurantMarker.showInfoWindow();
     }
 
-   /* private void getDevLoc() {
-        client = LocationServices.getFusedLocationProviderClient(this);
-        final Task location = client.getLastLocation();
-        location.addOnCompleteListener( new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if(task.isSuccessful()){
-                    userLat = task.getResult().getLatitude();
-                    userLng = task.getResult().getLongitude();
-                    Log.d(TAG, "onComplete: uLat = " + userLat);
-                    Log.d(TAG, "onComplete: uLng = " + userLng);
-                }
-                else{
-                    Toast.makeText(MapsActivity.this, "failed to get loc", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-    }*/
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -323,7 +268,9 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
-    // Load api url
+    /**
+     * Loads the govt data api url
+     */
     private void loadAPIUrl(){
         try{
             String govURL = "https://api.data.gov.sg/v1/transport/taxi-availability";
@@ -334,7 +281,9 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
-    // Get result from govt API
+    /**
+     * Get and store the result from govt data API
+     */
     private class JsonTask extends AsyncTask<String, String, String> {
 
         @Override
@@ -392,7 +341,10 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
-    // Show available taxi as gmap marker
+    /**
+     * Shows the available taxis on map activity as a maker
+     * @param taxiArray is an array of available taxis' coordinates
+     */
     private void showTaxiMarkers(JSONArray taxiArray){
         int length = taxiArray.length();
         JSONArray temp;
@@ -421,6 +373,10 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Calculates the direction from the user's current location to the restaurant
+     * @param mode is the mode of transport (Car, transit, walk)
+     */
     public void calcDirections(String mode){
         DirectionsApiRequest directions = new DirectionsApiRequest(geoApiContext);
         directions.origin(new com.google.maps.model.LatLng(userLat,userLng));
@@ -454,6 +410,10 @@ public class MapsActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Shows the route on map activity
+     * @result is the directions to the selected restaurant
+     */
     public void traceRoute(DirectionsResult result){
         //post method to run on the main thread
         new Handler(Looper.getMainLooper()).post(new Runnable() {

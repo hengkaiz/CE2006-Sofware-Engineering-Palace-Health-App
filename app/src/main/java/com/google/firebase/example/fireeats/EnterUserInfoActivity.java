@@ -21,6 +21,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Enter user info activity containing health information fields for new users to fill in
+ */
 public class EnterUserInfoActivity extends AppCompatActivity
         implements View.OnClickListener{
 
@@ -131,7 +134,9 @@ public class EnterUserInfoActivity extends AppCompatActivity
         }
     }
 
-    // Store user information in Firestore
+    /**
+     * Stores the information that the user have entered into firestore
+     */
     private void enterUserInfoToDb(){
         if(!validateForm()){ return; }
         Map<String, Object> user = new HashMap<>();
@@ -180,7 +185,10 @@ public class EnterUserInfoActivity extends AppCompatActivity
         finish();
     }
 
-    // Use HealthRiskUtil to calculate BMI and Risk level
+    /**
+     * User HealthRiskUtil to calculate user's BMI and Risk levels
+     * @param user_hash is a hash map containing the user's information
+     */
     private Map calculateData(Map user_hash){
         User user = new User(user_hash.get("name").toString(),
                 (int)user_hash.get("age"),
@@ -209,6 +217,9 @@ public class EnterUserInfoActivity extends AppCompatActivity
         return user_hash;
     }
 
+    /**
+     * Checks if the information that the user entered is valid
+     */
     private boolean validateForm() {
         boolean valid = true;
 
