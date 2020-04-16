@@ -406,7 +406,7 @@ public class MapsActivity extends AppCompatActivity implements
                 lng = temp.getDouble(0);
                 taxiCoor = new LatLng(lat, lng);
                 Location.distanceBetween(userLat,userLng,lat,lng,results);
-                if(results[0] < 1000) {
+                if(results[0] < 1500) {
                     taxiMarker = mMap.addMarker(new MarkerOptions()
                             .position(taxiCoor)
                             .snippet((int) (results[0]) + "m away!")
