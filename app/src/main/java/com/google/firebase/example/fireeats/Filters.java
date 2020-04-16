@@ -37,8 +37,8 @@ public class Filters {
     private String sortBy = null;
     private Query.Direction sortDirection = null;
 
-    private double userCoordinatesLat = 1.348326; //1348326103683129L
-    private double userCoordinatesLon = 103.683129; //103683129
+    private double userCoordinatesLat;// = 1.369053; //1348326103683129L
+    private double userCoordinatesLon;// = 103.960883; //103683129
 
     private long upperLimit = -1;
     private long lowerLimit = -1;
@@ -47,6 +47,20 @@ public class Filters {
 
     // Set the upper and lower coordinate limits based on user coordinate
     public Filters() {
+        getNewCoordinates(/*latitude*/ getUserCoordinatesLat(),
+                /*longitude*/ getUserCoordinatesLon(),
+                /*bearing*/315, /*distance(nm)*/3);
+        setUpperLimit(getCalCoordinatesLat(), getCalCoodinatesLong());
+
+        getNewCoordinates(/*latitude*/ getUserCoordinatesLat(),
+                /*longitude*/ getUserCoordinatesLon(),
+                /*bearing*/135, /*distance(nm``)*/3);
+        setLowerLimit(getCalCoordinatesLat(), getCalCoodinatesLong());
+    }
+
+    public Filters(double userCoorLat, double userCoorLng) {
+        this.setUserCoordinatesLat(userCoorLat);
+        this.setUserCoordinatesLon(userCoorLng);
         getNewCoordinates(/*latitude*/ getUserCoordinatesLat(),
                 /*longitude*/ getUserCoordinatesLon(),
                 /*bearing*/315, /*distance(nm)*/3);
