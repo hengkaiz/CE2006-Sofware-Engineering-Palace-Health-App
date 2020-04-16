@@ -15,8 +15,13 @@
  */
  package com.google.firebase.example.fireeats;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -29,11 +34,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -70,7 +78,7 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 public class RestaurantDetailActivity extends AppCompatActivity implements
         View.OnClickListener,
         EventListener<DocumentSnapshot>,
-        RatingDialogFragment.RatingListener {
+        RatingDialogFragment.RatingListener{
 
     private static final String TAG = "RestaurantDetail";
 
@@ -102,8 +110,13 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
     private double restaurantLat;
     private double restaurantLng;
     private String restaurantName;
+    private double uLat;
+    private double uLng;
 
     private String uID;
+    private FusedLocationProviderClient client;
+    private LocationManager locMag;
+    private LocationListener locList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +199,45 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mRatingsRecycler.setAdapter(mRatingAdapter);
 
         mRatingDialog = new RatingDialogFragment();
+
+        client = LocationServices.getFusedLocationProviderClient(this);
+
+        locMag = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locList = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                uLat = location.getLatitude();
+                uLng = location.getLongitude();
+                Log.d(TAG, "onLocationChanged: userLat" + location.getLatitude());
+                Log.d(TAG, "onLocationChanged: userLng" + location.getLongitude());
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locMag.requestLocationUpdates("gps", 5000, 0, locList);
     }
 
     @Override
@@ -240,10 +292,26 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
                 onAddRatingClicked(v);
                 break;
             case R.id.show_directions:
+                /*final Task location = client.getLastLocation();
+                location.addOnCompleteListener( new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if(task.isSuccessful()){
+                            uLat = task.getResult().getLatitude();
+                            uLng = task.getResult().getLongitude();
+                        }
+                        else{
+                            Toast.makeText(RestaurantDetailActivity.this, "failed to get loc", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }); */
+
                 Intent intent = new Intent(RestaurantDetailActivity.this, MapsActivity.class);
                 intent.putExtra(MapsActivity.RESTAURANT_LAT, restaurantLat);
                 intent.putExtra(MapsActivity.RESTAURANT_LNG, restaurantLng);
                 intent.putExtra(MapsActivity.RESTAURANT_NAME, restaurantName);
+                intent.putExtra(MapsActivity.USER_LAT, uLat);
+                intent.putExtra(MapsActivity.USER_LNG, uLng);
                 startActivity(intent);
                 break;
             case R.id.favorite_restaurant:
