@@ -8,15 +8,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,9 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,12 +36,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Main activity for Palace Health
@@ -58,10 +49,8 @@ public class MainActivity extends AppCompatActivity implements
         RestaurantAdapter.OnRestaurantSelectedListener {
 
     private static final String TAG = "MainActivity";
-
     private static final int RC_SIGN_IN = 9001;
     private static final int RC_ADD_USER_INFO = 9002;
-
     private static final int LIMIT = 50;
 
     private Toolbar mToolbar;
@@ -69,21 +58,18 @@ public class MainActivity extends AppCompatActivity implements
     private TextView mCurrentSortByView;
     private RecyclerView mRestaurantsRecycler;
     private ViewGroup mEmptyView;
+    private FilterDialogFragment mFilterDialog;
+    private RestaurantAdapter mAdapter;
+    private MainActivityViewModel mViewModel;
+    private BottomNavigationView bottomNavigation;
 
     private FirebaseFirestore mFirestore;
     private Query mQuery;
-
-    private FilterDialogFragment mFilterDialog;
-    private RestaurantAdapter mAdapter;
-
-    private MainActivityViewModel mViewModel;
-    private BottomNavigationView bottomNavigation;
 
     private LocationManager locMag;
     private LocationListener locList;
     private double uLat = 1.369053;
     private double uLng = 103.960883;
-    //private Filters filtersD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements
         // Filter Dialog
         mFilterDialog = new FilterDialogFragment();
 
+        //get gps location
         locMag = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locList = new LocationListener() {
             @Override
@@ -158,18 +145,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * Initialize firestore
+     * Initialize Firestore
      */
     private void initFirestore() {
         mFirestore = FirebaseFirestore.getInstance();
 
         Filters filters = mViewModel.getFilters();
-        /*Log.d(TAG, "initFirestore: uLatB" + filters.getUserCoordinatesLat());
-        Log.d(TAG, "initFirestore: ulngB" + filters.getUserCoordinatesLon());
-        filters.setUserCoordinatesLat(uLat);
-        filters.setUserCoordinatesLon(uLng);
-        Log.d(TAG, "initFirestore: uLat" + filters.getUserCoordinatesLat());
-        Log.d(TAG, "initFirestore: ulng" + filters.getUserCoordinatesLon());*/
 
         // Get the 50 highest rated restaurants
         mQuery = mFirestore.collection("restaurants");
@@ -222,8 +203,10 @@ public class MainActivity extends AppCompatActivity implements
             return;
         }
 
+        //no record of user
         while (FirebaseAuth.getInstance().getCurrentUser() == null) ;
 
+        //check for user info
         needEnterUserInfo();
 
         // Apply filters
@@ -231,19 +214,11 @@ public class MainActivity extends AppCompatActivity implements
         filters.setSortBy(Restaurant.FIELD_AVG_RATING);
         filters.setSortDirection(Query.Direction.DESCENDING);
         filters.setCity("Nearby");
-        /*filters.setUserCoordinatesLat(uLat);
-        filters.setUserCoordinatesLon(uLng);
-        filters.setUpperLimit(uLat,uLng);
-        filters.setLowerLimit(uLat,uLng);*/
-        Log.d(TAG, "initFirestore: uLat" + filters.getUserCoordinatesLat());
-        Log.d(TAG, "initFirestore: ulng" + filters.getUserCoordinatesLon());
+        Log.d(TAG, "onStart: uLat" + filters.getUserCoordinatesLat());
+        Log.d(TAG, "onStart: ulng" + filters.getUserCoordinatesLon());
         Log.d(TAG, "onStart: upperLimit " + filters.getUpperLimit());
         Log.d(TAG, "onStart: lowerlimit " + filters.getLowerLimit());
         onFilter(filters);
-
-
-        //Apply filters
-        //onFilter(mViewModel.getFilters());*/
 
         // Start listening for Firestore updates
         if (mAdapter != null) {
@@ -296,8 +271,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onFilter(Filters filters) {
 
-        Log.d(TAG, "onFilterB: uLat " + filters.getUserCoordinatesLat());
-        Log.d(TAG, "onFilterB: uLng " + filters.getUserCoordinatesLon());
+        Log.d(TAG, "onFilter: uLat " + filters.getUserCoordinatesLat());
+        Log.d(TAG, "onFilter: uLng " + filters.getUserCoordinatesLon());
 
         // Construct query basic query
         Query query = mFirestore.collection("restaurants");
@@ -408,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * Opens sign in activity for uesrs to create/log in to the app
+     * Opens sign in activity for users to create/log in to the app
      */
     private void startSignIn() {
         // Sign in with FirebaseUI

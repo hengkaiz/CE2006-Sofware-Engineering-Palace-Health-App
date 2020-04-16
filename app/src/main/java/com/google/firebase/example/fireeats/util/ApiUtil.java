@@ -6,12 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-
 /**
- * Util to query coordinates of available taxis from govt data Available Taxi API
+ * Utilities to query coordinates of available taxis from govt data Available Taxi API
  */
 public class ApiUtil {
     private String result;

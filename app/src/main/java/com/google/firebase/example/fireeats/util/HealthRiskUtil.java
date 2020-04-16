@@ -24,7 +24,7 @@ package com.google.firebase.example.fireeats.util;
 import com.google.firebase.example.fireeats.model.User;
 
 /**
- * Util to calculate health risk, BMI of the user based on the information that they have entered
+ * Utilities to calculate health risk, BMI of the user based on the information that they have entered
  */
 public class HealthRiskUtil {
     private double weight;
@@ -50,7 +50,7 @@ public class HealthRiskUtil {
     public HealthRiskUtil(){}
 
     /**
-     * Constructor for healthriskutil object
+     * Constructor for HealthRiskUtil object
      * @param user is the user object containing the user's information
      */
     public HealthRiskUtil(User user) {

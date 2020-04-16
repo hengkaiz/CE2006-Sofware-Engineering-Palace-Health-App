@@ -22,10 +22,6 @@ import com.google.firebase.example.fireeats.model.Restaurant;
 import com.google.firebase.example.fireeats.util.RestaurantUtil;
 import com.google.firebase.firestore.Query;
 
-import java.text.DecimalFormat;
-
-import static java.lang.StrictMath.abs;
-
 /**
  * Object for passing filters around.
  */
@@ -37,8 +33,8 @@ public class Filters {
     private String sortBy = null;
     private Query.Direction sortDirection = null;
 
-    private double userCoordinatesLat;// = 1.369053; //1348326103683129L
-    private double userCoordinatesLon;// = 103.960883; //103683129
+    private double userCoordinatesLat;
+    private double userCoordinatesLon;
 
     private long upperLimit = -1;
     private long lowerLimit = -1;
@@ -61,6 +57,9 @@ public class Filters {
         setLowerLimit(getCalCoordinatesLat(), getCalCoodinatesLong());
     }
 
+    /**
+     * Constructor for object with user lat and user lng as parameters.
+     */
     public Filters(double userCoorLat, double userCoorLng) {
         this.setUserCoordinatesLat(userCoorLat);
         this.setUserCoordinatesLon(userCoorLng);

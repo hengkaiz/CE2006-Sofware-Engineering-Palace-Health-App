@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Restaurant POJO.
+ * Information about a restaurant
  */
 @IgnoreExtraProperties
 public class Restaurant {

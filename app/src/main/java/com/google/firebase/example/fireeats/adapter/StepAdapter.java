@@ -17,7 +17,7 @@ import com.google.maps.model.DirectionsStep;
 import java.util.List;
 
 /**
- * Adapter to display the descriptions for each step in a route
+ * RecyclerView adapter for a list of steps in a route
  */
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
 

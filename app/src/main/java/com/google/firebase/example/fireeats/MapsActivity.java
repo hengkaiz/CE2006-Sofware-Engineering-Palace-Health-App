@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -24,23 +23,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.example.fireeats.adapter.StepAdapter;
 import com.google.firebase.example.fireeats.model.PolylineData;
 import com.google.firebase.example.fireeats.util.ApiUtil;
@@ -86,24 +79,6 @@ public class MapsActivity extends AppCompatActivity implements
     public static final String USER_LAT = "user_lat";
     public static final String USER_LNG = "user_lng";
 
-    private GoogleMap mMap;
-    private FirebaseFirestore mFirestore;
-    private GeoApiContext geoApiContext = null;
-
-    private double restaurantLat;
-    private double restaurantLng;
-    private String restaurantName;
-    private double userLat;// = 1.369053;// = 1.348326; //1.348326;//1.353286;
-    private double userLng;// = 103.960883;// = 103.683129; //103.683129;//103.682812;
-    private LatLng restaurantCoor;
-    private LatLng userCoor;
-    private LatLng taxiCoor;
-    private Marker restaurantMarker;
-    private Marker userMarker;
-    private Marker taxiMarker;
-    private ArrayList<PolylineData> polylineData = new ArrayList<>();
-    private List<DirectionsStep> stepList = new ArrayList<>();  
-
     private SupportMapFragment mapFragment;
     private RecyclerView mDirectionsRecycler;
     private RecyclerView.Adapter adapter;
@@ -113,7 +88,24 @@ public class MapsActivity extends AppCompatActivity implements
     private Button mBtnTransit;
     private Button mBtnWalk;
 
+    private GoogleMap mMap;
+    private FirebaseFirestore mFirestore;
+    private GeoApiContext geoApiContext = null;
+
     private String taxiCoordinates;
+    private double restaurantLat;
+    private double restaurantLng;
+    private String restaurantName;
+    private double userLat;
+    private double userLng;
+    private LatLng restaurantCoor;
+    private LatLng userCoor;
+    private LatLng taxiCoor;
+    private Marker restaurantMarker;
+    private Marker userMarker;
+    private Marker taxiMarker;
+    private ArrayList<PolylineData> polylineData = new ArrayList<>();
+    private List<DirectionsStep> stepList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,21 +184,17 @@ public class MapsActivity extends AppCompatActivity implements
 
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
 
-        //getDevLoc();
-
         mMap.setMyLocationEnabled(true);
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
 
+        //init restaurant coordinates
         restaurantCoor = new LatLng(restaurantLat,restaurantLng);
-        Log.d(TAG, "lat = " + restaurantLat);
-        Log.d(TAG, "lng = " + restaurantLng);
-        Log.d(TAG, "name = " + restaurantName);
+        Log.d(TAG, "onMapReady: rlat = " + restaurantLat + ", rlng = " + restaurantLng + ", rname = " + restaurantName);
 
-        //hardcoded userLoc until fixed
+        //init user coordinates
         userCoor = new LatLng(userLat,userLng);
-        Log.d(TAG, "onMapReady: userLat = " + userLat);
-        Log.d(TAG, "onMapReady: userLng = " + userLng);
+        Log.d(TAG, "onMapReady: userLat = " + userLat + ", userLng = "  + userLng);
 
         //get distance between the 2 coordinates
         float results[] = new float[10];
@@ -395,6 +383,7 @@ public class MapsActivity extends AppCompatActivity implements
                 directions.mode(TravelMode.WALKING);
                 break;
         }
+
         directions.setCallback(new PendingResult.Callback<DirectionsResult>() {
             @Override
             public void onResult(DirectionsResult result) {

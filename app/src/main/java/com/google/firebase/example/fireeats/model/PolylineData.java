@@ -5,7 +5,7 @@ import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsRoute;
 
 /**
- * Class stores all the Polyline data for different routes calculated.
+ * Store all Polyline data for different routes calculated.
  */
 public class PolylineData {
     private Polyline polyline;

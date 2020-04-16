@@ -1,14 +1,8 @@
 package com.google.firebase.example.fireeats;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +13,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.example.fireeats.adapter.RatingAdapter;
@@ -53,17 +40,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
+
 
 /**
  * This class controls the activity for restaurant details
  */
-
 public class RestaurantDetailActivity extends AppCompatActivity implements
         View.OnClickListener,
         EventListener<DocumentSnapshot>,
@@ -84,7 +66,6 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
     private TextView mPriceView;
     private ViewGroup mEmptyView;
     private RecyclerView mRatingsRecycler;
-
     private TextView mRestaurantDetails;
     private TextView mRestaurantOpeningHours;
     private TextView mRestaurantGoodForDetails;
@@ -103,20 +84,15 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
     private String restaurantName;
     private double uLat;
     private double uLng;
-
     private String uID;
-    private FusedLocationProviderClient client;
-    private LocationManager locMag;
-    private LocationListener locList;
-    /**
-     * When the activity is created
-     * @param savedInstanceState points to the saved state of the previous activity
-     */
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail);
-        
+
+        //set up layouts
         mImageView = findViewById(R.id.restaurant_image);
         mNameView = findViewById(R.id.restaurant_name);
         mRatingIndicator = findViewById(R.id.restaurant_rating);
@@ -126,18 +102,18 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mPriceView = findViewById(R.id.restaurant_price);
         mEmptyView = findViewById(R.id.view_empty_ratings);
         mRatingsRecycler = findViewById(R.id.recycler_ratings);
-
         mRestaurantDetails = findViewById(R.id.restaurant_details);
         mRestaurantOpeningHours = findViewById(R.id.restaurant_opening_hours);
         mRestaurantGoodForDetails = findViewById(R.id.restaurant_good_for_details);
 
-
+        //set up buttons
         findViewById(R.id.restaurant_button_back).setOnClickListener(this);
         findViewById(R.id.fab_show_rating_dialog).setOnClickListener(this);
         findViewById(R.id.show_directions).setOnClickListener(this);
         findViewById(R.id.favorite_restaurant).setOnClickListener(this);
         findViewById(R.id.unfavorite_restaurant).setOnClickListener(this);
 
+        //get extras
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
             throw new IllegalArgumentException("Must pass extra ");
@@ -181,7 +157,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .limit(50);
 
-        // RecyclerView
+        // RecyclerView for ratings
         mRatingAdapter = new RatingAdapter(ratingsQuery) {
             @Override
             protected void onDataChanged() {
@@ -201,9 +177,6 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mRatingDialog = new RatingDialogFragment();
     }
 
-    /**
-     * When the activity starts
-     */
     @Override
     public void onStart() {
         super.onStart();
@@ -237,9 +210,6 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * When the activity stops
-     */
     @Override
     public void onStop() {
         super.onStop();
@@ -252,9 +222,6 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * When the a button on the activity is pressed
-     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -265,20 +232,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
                 onAddRatingClicked(v);
                 break;
             case R.id.show_directions:
-                /*final Task location = client.getLastLocation();
-                location.addOnCompleteListener( new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if(task.isSuccessful()){
-                            uLat = task.getResult().getLatitude();
-                            uLng = task.getResult().getLongitude();
-                        }
-                        else{
-                            Toast.makeText(RestaurantDetailActivity.this, "failed to get loc", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }); */
-
+                //put extras for next activity
                 Intent intent = new Intent(RestaurantDetailActivity.this, MapsActivity.class);
                 intent.putExtra(MapsActivity.RESTAURANT_LAT, restaurantLat);
                 intent.putExtra(MapsActivity.RESTAURANT_LNG, restaurantLng);

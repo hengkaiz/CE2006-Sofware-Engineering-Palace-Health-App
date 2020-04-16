@@ -28,11 +28,15 @@ public class EnterUserInfoActivity extends AppCompatActivity
         implements View.OnClickListener{
 
     private static final String TAG = "LOG";
+
     private EditText mAge;
     private EditText mHeight;
     private EditText mWeight;
     private EditText mCholesterol;
     private EditText mBloodPressure;
+
+    private FirebaseFirestore mFirestore;
+
     private String uid;
     private String mSex = "Male";
     private String mTreatedForHBP = "No";
@@ -41,7 +45,6 @@ public class EnterUserInfoActivity extends AppCompatActivity
     private int mActivityLevel = 0;
     private String mHistoryHeartDisease = "No";
 
-    private FirebaseFirestore mFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +61,10 @@ public class EnterUserInfoActivity extends AppCompatActivity
         // Buttons
         findViewById(R.id.user_sex_male_button).setOnClickListener(this);
         findViewById(R.id.user_sex_female_button).setOnClickListener(this);
-
         findViewById(R.id.user_treated_for_hbp_yes).setOnClickListener(this);
         findViewById(R.id.user_treated_for_hbp_no).setOnClickListener(this);
         findViewById(R.id.user_diabetic_yes).setOnClickListener(this);
         findViewById(R.id.user_diabetic_no).setOnClickListener(this);
-
         findViewById(R.id.user_smoke_yes).setOnClickListener(this);
         findViewById(R.id.user_smoke_no).setOnClickListener(this);
         findViewById(R.id.user_activity_level_none).setOnClickListener(this);

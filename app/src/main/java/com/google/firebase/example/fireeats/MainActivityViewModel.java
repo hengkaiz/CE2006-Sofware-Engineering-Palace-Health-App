@@ -17,12 +17,9 @@
 
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.example.fireeats.Filters;
-
 /**
  * ViewModel for MainActivity
  */
-
 public class MainActivityViewModel extends ViewModel {
 
     private boolean mIsSigningIn;

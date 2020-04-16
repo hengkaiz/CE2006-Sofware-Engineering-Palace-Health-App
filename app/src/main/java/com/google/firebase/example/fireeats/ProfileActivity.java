@@ -6,21 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.sip.SipSession;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.example.fireeats.model.Restaurant;
 import com.google.firebase.example.fireeats.model.User;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,7 +32,6 @@ public class ProfileActivity extends AppCompatActivity implements
     private static final String TAG = "ProfilePage";
 
     private BottomNavigationView bottomNavigation;
-
     private TextView mProfileName;
     private TextView mProfileAge;
     private TextView mProfileSex;
@@ -48,17 +41,15 @@ public class ProfileActivity extends AppCompatActivity implements
     private TextView mProfileChol;
     private TextView mProfileBP;
     private TextView mProfileRL;
-
     private TextView mProfileRLTitle;
     private RelativeLayout mProfileRLLinear;
 
-    private String uID;
     private DocumentReference mUserRef;
     private FirebaseFirestore mFirestore;
-
     private ListenerRegistration mUserRegistration;
-
     private Toolbar mToolbar;
+
+    private String uID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity implements
         bottomNavigation.setOnNavigationItemSelectedListener(navListener);
         bottomNavigation.setSelectedItemId(R.id.profile_page);
 
+        //set up layouts
         mProfileName = findViewById(R.id.profile_page_name);
         mProfileAge = findViewById(R.id.profile_page_age);
         mProfileSex = findViewById(R.id.profile_page_sex);
@@ -79,7 +71,6 @@ public class ProfileActivity extends AppCompatActivity implements
         mProfileBP = findViewById(R.id.profile_page_bp);
         mProfileRL = findViewById(R.id.profile_page_risk_level);
         mProfileRLTitle = findViewById(R.id.profile_page_risk_level_title);
-
         mProfileRLLinear = findViewById(R.id.profile_page_risk_level_layout);
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

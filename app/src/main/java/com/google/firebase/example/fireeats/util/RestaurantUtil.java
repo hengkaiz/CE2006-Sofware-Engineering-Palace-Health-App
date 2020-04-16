@@ -15,14 +15,8 @@
  */
  package com.google.firebase.example.fireeats.util;
 
-import android.content.Context;
-
-import com.google.firebase.example.fireeats.R;
 import com.google.firebase.example.fireeats.model.Restaurant;
 
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

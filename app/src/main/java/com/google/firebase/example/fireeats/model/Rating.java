@@ -23,7 +23,7 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 
 /**
- * Model POJO for a rating.
+ * Information about a rating.
  */
 public class Rating {
 

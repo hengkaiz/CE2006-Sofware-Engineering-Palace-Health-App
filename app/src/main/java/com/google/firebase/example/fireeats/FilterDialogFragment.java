@@ -26,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.example.fireeats.model.Restaurant;
 import com.google.firebase.firestore.Query;
 
