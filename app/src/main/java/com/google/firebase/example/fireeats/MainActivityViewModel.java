@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.example.fireeats.Filters;
 
 /**
- * ViewModel for {@link com.google.firebase.example.fireeats.MainActivity}.
+ * ViewModel for MainActivity
  */
 
 public class MainActivityViewModel extends ViewModel {

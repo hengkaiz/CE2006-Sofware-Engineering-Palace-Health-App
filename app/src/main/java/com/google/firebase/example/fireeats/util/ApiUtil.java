@@ -10,6 +10,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+/**
+ * Util to query coordinates of available taxis from govt data Available Taxi API
+ */
 public class ApiUtil {
     private String result;
     private JSONObject resultObj;
@@ -17,13 +20,22 @@ public class ApiUtil {
     private double userLat;
     private double userLng;
 
+    /**
+     * Constructor for ApiUtil
+     * @param result is the json string returned from govt data api
+     * @param userLat is the user's current lat
+     * @param userLng is the user's current long
+     */
     public ApiUtil(String result, double userLat, double userLng){
         this.result = result;
         this.userLat = userLat;
         this.userLng = userLng;
     }
 
-    // Filters and returns the coordinates of all taxi
+    /**
+     * Queries json string for coordinates of available taxis
+     * @return JSONArray of available taxi coordinates
+     */
     public JSONArray convertToObj(){
         try{
             resultObj = new JSONObject(result);

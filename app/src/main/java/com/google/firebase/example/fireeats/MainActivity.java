@@ -48,6 +48,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Main activity for Palace Health
+ * Shows a list of filtered restaurants based on the user's current location and health info
+ */
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
         FilterDialogFragment.FilterListener,
@@ -153,6 +157,9 @@ public class MainActivity extends AppCompatActivity implements
         locMag.requestLocationUpdates("gps", 5000, 0, locList);
     }
 
+    /**
+     * Initialize firestore
+     */
     private void initFirestore() {
         mFirestore = FirebaseFirestore.getInstance();
 
@@ -171,6 +178,9 @@ public class MainActivity extends AppCompatActivity implements
                 .orderBy("x_y", Query.Direction.DESCENDING).limit(LIMIT);
     }
 
+    /**
+     * Initialize recycler view for the restaurant fragments
+     */
     private void initRecyclerView() {
         if (mQuery == null) {
             Log.w(TAG, "No query, not initializing RecyclerView");
@@ -216,29 +226,6 @@ public class MainActivity extends AppCompatActivity implements
 
         needEnterUserInfo();
 
-        //onFilter(filtersD);
-
-        /*new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                // Apply filters
-                Filters filters = new Filters(uLat,uLng);
-                filters.setSortBy(Restaurant.FIELD_AVG_RATING);
-                filters.setSortDirection(Query.Direction.DESCENDING);
-                filters.setCity("Nearby");
-                /*filters.setUserCoordinatesLat(uLat);
-                filters.setUserCoordinatesLon(uLng);
-                filters.setUpperLimit(uLat,uLng);
-                filters.setLowerLimit(uLat,uLng);*/
-                /*Log.d(TAG, "initFirestore: uLat" + filters.getUserCoordinatesLat());
-                Log.d(TAG, "initFirestore: ulng" + filters.getUserCoordinatesLon());
-                Log.d(TAG, "onStart: upperLimit " + filters.getUpperLimit());
-                Log.d(TAG, "onStart: lowerlimit " + filters.getLowerLimit());
-                onFilter(filters);
-            }
-        });*/
-
-
         // Apply filters
         Filters filters = new Filters(uLat,uLng);
         filters.setSortBy(Restaurant.FIELD_AVG_RATING);
@@ -272,8 +259,10 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    // Check if user have already entered their health info
-    // Required. In order to use the app
+    /**
+     * Check if user have already entered their health info
+     * Required. In order for the user to use the app
+     */
     private void needEnterUserInfo(){
         DocumentReference docRef = mFirestore.collection("users")
                                              .document(FirebaseAuth.getInstance()
@@ -296,6 +285,9 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Opens enter user info activity for new users to enter their health information
+     */
     private void addUserData(){
         Intent intent = new Intent(this, EnterUserInfoActivity.class);
         startActivityForResult(intent, RC_ADD_USER_INFO);
@@ -306,15 +298,9 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.d(TAG, "onFilterB: uLat " + filters.getUserCoordinatesLat());
         Log.d(TAG, "onFilterB: uLng " + filters.getUserCoordinatesLon());
-        //filters.setUserCoordinatesLat(uLat);
-        //filters.setUserCoordinatesLon(uLng);
 
         // Construct query basic query
         Query query = mFirestore.collection("restaurants");
-
-
-        //Log.d(TAG, "onFilter: uLat " + filters.getUserCoordinatesLat());
-        //Log.d(TAG, "onFilter: uLng " + filters.getUserCoordinatesLon());
 
         // Category (equality filter)
         if (filters.hasCategory()) {
@@ -421,6 +407,9 @@ public class MainActivity extends AppCompatActivity implements
         return (!mViewModel.getIsSigningIn() && FirebaseAuth.getInstance().getCurrentUser() == null);
     }
 
+    /**
+     * Opens sign in activity for uesrs to create/log in to the app
+     */
     private void startSignIn() {
         // Sign in with FirebaseUI
             Intent intent = AuthUI.getInstance().createSignInIntentBuilder()

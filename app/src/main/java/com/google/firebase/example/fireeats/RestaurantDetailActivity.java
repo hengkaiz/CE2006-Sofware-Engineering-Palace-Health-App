@@ -1,19 +1,4 @@
-/**
- * Copyright 2017 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
- package com.google.firebase.example.fireeats;
+package com.google.firebase.example.fireeats;
 
 import android.Manifest;
 import android.content.Context;
@@ -75,6 +60,10 @@ import java.util.Map;
 
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
+/**
+ * This class controls the activity for restaurant details
+ */
+
 public class RestaurantDetailActivity extends AppCompatActivity implements
         View.OnClickListener,
         EventListener<DocumentSnapshot>,
@@ -119,7 +108,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
     private FusedLocationProviderClient client;
     private LocationManager locMag;
     private LocationListener locList;
-
+    /**
+     * When the activity is created
+     * @param savedInstanceState points to the saved state of the previous activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,12 +137,6 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         findViewById(R.id.show_directions).setOnClickListener(this);
         findViewById(R.id.favorite_restaurant).setOnClickListener(this);
         findViewById(R.id.unfavorite_restaurant).setOnClickListener(this);
-
-        // Get restaurant ID from extras
-        /*restaurantId = getIntent().getExtras().getString(KEY_RESTAURANT_ID);
-        if (restaurantId == null) {
-            throw new IllegalArgumentException("Must pass extra " + KEY_RESTAURANT_ID);
-        }*/
 
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
@@ -213,47 +199,11 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mRatingsRecycler.setAdapter(mRatingAdapter);
 
         mRatingDialog = new RatingDialogFragment();
-
-        //client = LocationServices.getFusedLocationProviderClient(this);
-
-        /*locMag = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locList = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                uLat = location.getLatitude();
-                uLng = location.getLongitude();
-                Log.d(TAG, "onLocationChanged: userLat" + location.getLatitude());
-                Log.d(TAG, "onLocationChanged: userLng" + location.getLongitude());
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locMag.requestLocationUpdates("gps", 5000, 0, locList);*/
     }
 
+    /**
+     * When the activity starts
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -269,7 +219,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         mRestaurantRegistration = mRestaurantRef.addSnapshotListener(this);
     }
 
-    // Show unfavorite/ favorite button depending on whether user already favorited it
+    /**
+     * Show unfavorite/ favorite button depending on whether user already favorited it
+     * @param fav is 0 if the favorite = false, and 1 if true
+     */
     private void updateUI(int fav){
         switch(fav){
             case 0:
@@ -284,6 +237,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * When the activity stops
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -296,6 +252,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * When the a button on the activity is pressed
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -337,7 +296,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         }
     }
 
-    // Remove restauarnt from favorites
+    /**
+     * Remove restaurant from user's favorites list
+     */
     private void removeFromFavorites(){
         String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -362,7 +323,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
                 });
     }
 
-    // Add restaurant to favorites
+    /**
+     * Add restaurant from user's favorites list
+     */
     private void addToFavorites(){
         String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -389,7 +352,11 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
 
     }
 
-    // Add new ratings for restaurant
+    /**
+     * Add new ratings to the selected restaurant
+     * @param restaurantRef is the selected restaurant
+     * @param rating is the rating/ review by the user
+     */
     private Task<Void> addRating(final DocumentReference restaurantRef,
                                  final Rating rating) {
         // Create reference for new rating, for use inside the transaction
@@ -440,6 +407,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements
         onRestaurantLoaded(snapshot.toObject(Restaurant.class));
     }
 
+    /**
+     * Fill in the restaurant info for the activity
+     * @param restaurant is the class containing the details for the selected restaurant
+     */
     private void onRestaurantLoaded(Restaurant restaurant) {
         mNameView.setText(restaurant.getName());
         mRatingIndicator.setRating((float) restaurant.getAvgRating());

@@ -1,4 +1,5 @@
-/* Calculating Health Risks for PALACE Health
+/**
+ *Calculating Health Risks for PALACE Health
  *   -by Noah Chong 25/3/2020
  *
  * Algorithm for determining health risk based on a modified version of the one found in:
@@ -22,6 +23,9 @@ package com.google.firebase.example.fireeats.util;
 
 import com.google.firebase.example.fireeats.model.User;
 
+/**
+ * Util to calculate health risk, BMI of the user based on the information that they have entered
+ */
 public class HealthRiskUtil {
     private double weight;
     private double height;
@@ -45,6 +49,10 @@ public class HealthRiskUtil {
 
     public HealthRiskUtil(){}
 
+    /**
+     * Constructor for healthriskutil object
+     * @param user is the user object containing the user's information
+     */
     public HealthRiskUtil(User user) {
         if (user.getSex().equals("Male")) {
             alpha = -22.1;
@@ -66,19 +74,26 @@ public class HealthRiskUtil {
         histHeartDisease = user.getHistoryHeartDisease().equals("Yes") ? true : false;
     }
 
-    // Calculates BMI
+    /**
+     * Calculates the BMI
+     */
     public double calBMI(){
         return weight / Math.pow(height/100, 2);
     }
 
-    // Calculating Risk from Risk Factors
-    // Cholesterol (mmol/L), Systolic Blood Pressure (mmHg), and Current Smoker (Y/N)
-    // Default values return exp(0) = 1;
+
+    /**
+     * Calculating Risk from Risk Factors
+     * Cholesterol (mmol/L), Systolic Blood Pressure (mmHg), and Current Smoker (Y/N)
+     * Default values return exp(0) = 1;
+     */
     public double calRiskRF(){
         return Math.exp((0.02*(chol-6)) + (0.022*(sys_bp-120)) + (0.63*smoke));
     }
 
-    // Calculating risk from age
+    /**
+     * Calculates risk from age
+     */
     public double calRiskAge(){
         double s10 = Math.exp(-Math.exp(alpha) * Math.pow(age - 10, p));
         double s0 = Math.exp(-Math.exp(alpha) * Math.pow(age - 20, p));
@@ -86,7 +101,9 @@ public class HealthRiskUtil {
         return 1- (s10/s0);
     }
 
-    // Calculate Total Risk Level
+    /**
+     * Calculates the total risk level
+     */
     public int calTotalRisk(){
         BMI = calBMI();
         riskRF = calRiskRF();

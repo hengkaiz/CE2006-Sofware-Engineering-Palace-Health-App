@@ -172,6 +172,10 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
         return null;
     }
 
+
+    /**
+     * Resets the filter options to default
+     */
     public void resetFilters() {
         if (mRootView != null) {
             mCategorySpinner.setSelection(0);
@@ -181,6 +185,9 @@ public class FilterDialogFragment extends DialogFragment implements View.OnClick
         }
     }
 
+    /**
+     * Get the current filters applied
+     */
     public Filters getFilters() {
         Filters filters = new Filters();
 
