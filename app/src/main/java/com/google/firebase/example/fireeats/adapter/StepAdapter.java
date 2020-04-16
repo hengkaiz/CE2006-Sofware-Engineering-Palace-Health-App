@@ -12,11 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.example.fireeats.R;
-import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsStep;
 
 import java.util.List;
 
+/**
+ * Adapter to display the descriptions for each step in a route
+ */
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
 
     private List<DirectionsStep> stepList;

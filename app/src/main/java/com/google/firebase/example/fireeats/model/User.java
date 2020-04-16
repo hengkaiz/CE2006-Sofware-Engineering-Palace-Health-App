@@ -1,5 +1,8 @@
 package com.google.firebase.example.fireeats.model;
 
+/**
+ * Class stores all the relevant user data, including health information of the user.
+ */
 public class User {
     public static final String FIELD_NAME = "name";
     public static final String FIELD_AGE = "age";

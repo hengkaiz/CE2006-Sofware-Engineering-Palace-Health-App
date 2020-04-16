@@ -30,7 +30,7 @@ import com.google.firebase.firestore.Query;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 /**
- * RecyclerView adapter for a bunch of Ratings.
+ * RecyclerView adapter for Ratings.
  */
 public class RatingAdapter extends FirestoreAdapter<RatingAdapter.ViewHolder> {
 
