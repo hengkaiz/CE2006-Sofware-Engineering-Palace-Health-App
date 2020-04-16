@@ -1,10 +1,14 @@
 package com.google.firebase.example.fireeats;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -19,6 +23,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,6 +38,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.example.fireeats.adapter.StepAdapter;
 import com.google.firebase.example.fireeats.model.PolylineData;
 import com.google.firebase.example.fireeats.util.ApiUtil;
@@ -63,12 +71,16 @@ import org.json.JSONException;
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         View.OnClickListener,
-        GoogleMap.OnPolylineClickListener{
+        GoogleMap.OnPolylineClickListener,
+        GoogleMap.OnMyLocationClickListener,
+        GoogleMap.OnMyLocationButtonClickListener {
 
     private static final String TAG = "Map";
     public static final String RESTAURANT_LNG = "restaurant_lat";
     public static final String RESTAURANT_LAT = "restaurant_lng";
     public static final String RESTAURANT_NAME = "restaurant_name";
+    public static final String USER_LAT = "user_lat";
+    public static final String USER_LNG = "user_lng";
 
     private GoogleMap mMap;
     private FirebaseFirestore mFirestore;
@@ -77,8 +89,8 @@ public class MapsActivity extends AppCompatActivity implements
     private double restaurantLat;
     private double restaurantLng;
     private String restaurantName;
-    private double userLat = 1.348326; //1.348326;//1.353286;
-    private double userLng = 103.683129; //103.683129;//103.682812;
+    private double userLat;// = 1.348326; //1.348326;//1.353286;
+    private double userLng;// = 103.683129; //103.683129;//103.682812;
     private LatLng restaurantCoor;
     private LatLng userCoor;
     private LatLng taxiCoor;
@@ -86,7 +98,7 @@ public class MapsActivity extends AppCompatActivity implements
     private Marker userMarker;
     private Marker taxiMarker;
     private ArrayList<PolylineData> polylineData = new ArrayList<>();
-    private List<DirectionsStep> stepList = new ArrayList<>();;
+    private List<DirectionsStep> stepList = new ArrayList<>();  
 
     private SupportMapFragment mapFragment;
     private RecyclerView mDirectionsRecycler;
@@ -125,6 +137,8 @@ public class MapsActivity extends AppCompatActivity implements
             restaurantLat = bundle.getDouble(RESTAURANT_LAT);
             restaurantLng = bundle.getDouble(RESTAURANT_LNG);
             restaurantName = bundle.getString(RESTAURANT_NAME);
+            userLat = bundle.getDouble(USER_LAT);
+            userLng = bundle.getDouble(USER_LNG);
             Log.d(TAG, "onCreate: rlat " + restaurantLat);
             Log.d(TAG, "onCreate: rlng " + restaurantLng);
             Log.d(TAG, "onCreate: name " + restaurantName);
@@ -146,6 +160,44 @@ public class MapsActivity extends AppCompatActivity implements
         mBtnTransit.setOnClickListener(this);
         mBtnWalk = findViewById(R.id.btnWalk);
         mBtnWalk.setOnClickListener(this);
+
+
+      /*  locMag = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locList = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                userLat = location.getLatitude();
+                userLng = location.getLongitude();
+                Log.d(TAG, "onLocationChanged: userLat" + location.getLatitude());
+                Log.d(TAG, "onLocationChanged: userLng" + location.getLongitude());
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locMag.requestLocationUpdates("gps", 5000, 0, locList);*/
     }
 
     /**
@@ -161,16 +213,24 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION}, 10);
-        }*/
+        }
         mMap = googleMap;
         mMap.setOnPolylineClickListener(this);
+
+        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
+
+        //getDevLoc();
+
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
 
         restaurantCoor = new LatLng(restaurantLat,restaurantLng);
         Log.d(TAG, "lat = " + restaurantLat);
@@ -198,6 +258,26 @@ public class MapsActivity extends AppCompatActivity implements
         restaurantMarker.showInfoWindow();
     }
 
+   /* private void getDevLoc() {
+        client = LocationServices.getFusedLocationProviderClient(this);
+        final Task location = client.getLastLocation();
+        location.addOnCompleteListener( new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if(task.isSuccessful()){
+                    userLat = task.getResult().getLatitude();
+                    userLng = task.getResult().getLongitude();
+                    Log.d(TAG, "onComplete: uLat = " + userLat);
+                    Log.d(TAG, "onComplete: uLng = " + userLng);
+                }
+                else{
+                    Toast.makeText(MapsActivity.this, "failed to get loc", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }*/
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -205,7 +285,7 @@ public class MapsActivity extends AppCompatActivity implements
                 calcDirections("driving");
                 //shows multiple markers in one screen
                 LatLngBounds bounds = new LatLngBounds.Builder().include(restaurantCoor).include(userCoor).build();
-                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 500));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
 
                 //setting up layout
                 mBtnDriving.setBackgroundColor(Color.GRAY);
@@ -451,15 +531,13 @@ public class MapsActivity extends AppCompatActivity implements
         onBackPressed();
     }
 
-    public boolean inNearby(LatLng coor){
-        Circle circle = mMap.addCircle(new CircleOptions().center(userCoor).radius(5000));
-        float results[] = new float[10];
-        Location.distanceBetween(userLat,userLng,coor.latitude,coor.longitude,results);
-        if(results[0]<=5000){
-            return true;
-        }
-        else{
-            return false;
-        }
+    @Override
+    public boolean onMyLocationButtonClick() {
+        return false;
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+
     }
 }
